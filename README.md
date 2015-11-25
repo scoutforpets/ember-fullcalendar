@@ -1,26 +1,82 @@
-# Ember-fullcalendar
+# ember-fullcalendar
 
-This README outlines the details of collaborating on this Ember addon.
+**ember-fullcalendar** brings the power of [FullCalendar](http://fullcalendar.io/) and [FullCalendar Scheduler](http://fullcalendar.io/scheduler/) to Ember.
 
 ## Installation
 
-* `git clone` this repository
-* `npm install`
-* `bower install`
+This addon works in Ember 1.13.9+ or 2.0+ with no deprecations.
 
-## Running
+To install it run:
 
-* `ember server`
-* Visit your app at http://localhost:4200.
+```ember install ember-fullcalendar```
 
-## Running Tests
+## Overview
+This addon currently supports every option and callback currently available for FullCalendar 2.0. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
-* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
+*NOTE:* This addon installs both FullCalendar and the new FullCalendar Scheduler addon. While you aren't required to use the Scheduler, it is currently packaged. In the future, there may be an option to disable importing the Scheduler if it's not needed.
 
-## Building
+## Usage
 
-* `ember build`
+A simple example:
 
-For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
+```handlebars
+{{full-calendar events=events}}
+```
+
+### FullCalendar Methods
+FullCalendar methods can be called like so:
+
+```javascript
+// app/controllers/application.js
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
+	actions: {
+		nextMonth(){
+			Ember.$('.full-calendar').fullCalendar('next');
+		}
+	}
+});
+```
+
+### FullCalendar Callbacks
+All FullCalendar and FullCalendar Scheduler callbacks are supported and can be handled using Ember Actions. Here's a simple example:
+
+Add the component to your template:
+
+```handlebars
+// app/templates/application.hbs
+{{full-calendar events=events eventClick=(action 'clicked')}}
+```
+
+Add some events:
+
+```javascript
+// app/routes/application.js
+import Ember from 'ember';
+
+export default Ember.Route.extend({
+	model: function() {
+		return {
+			events: Ember.A([{
+				title: 'Partayyyy', start: new Date()
+			}])
+  	};
+	}
+});
+```
+
+Register the action in your controller or component:
+
+```javascript
+// app/controllers/application.js
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
+	actions: {
+		clicked(event, jsEvent, view){
+			this.showModal(event);
+		}
+	}
+});
+```

@@ -1,7 +1,7 @@
 {
   "name": "ember-fullcalendar",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "An Ember Component for FullCalendar and FullCalendar Scheduler",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "",
+  "repository": "https://github.com/scoutforpets/ember-fullcalendar.git",
   "engines": {
     "node": ">= 0.10.0"
   },
@@ -32,16 +32,22 @@
     "ember-cli-sri": "^1.1.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-data": "1.13.15",
+    "ember-disable-prototype-extensions": "^1.0.0",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-export-application-global": "^1.0.4",
-    "ember-disable-prototype-extensions": "^1.0.0",
+    "ember-invoke-action": "1.2.0",
     "ember-try": "~0.0.8"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "fullcalendar",
+    "scheduler",
+    "ember-fullcalendar",
+    "ember"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.5"
+    "ember-cli-babel": "^5.1.5",
+    "ember-cli-htmlbars": "^1.0.1"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
