@@ -80,3 +80,12 @@ export default Ember.Controller.extend({
 	}
 });
 ```
+
+## FullCalendar Scheduler License
+By default, the addon uses the [Free Trial License Key](http://fullcalendar.io/scheduler/download/) provided by FullCalendar. If you have a paid license key, you may set it by explicitly passing it into the component as `schedulerLicenseKey` or, the better option, is to set it in your `config/environment.js` file like so:
+
+```javascript
+	emberFullCalendar: {
+		schedulerLicenseKey: '<your license key>'
+	}
+```

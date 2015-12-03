@@ -16,7 +16,20 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
 
   // scheduler defaults to non-commercial license
-  schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+  schedulerLicenseKey: Ember.computed(function() {
+
+    // load the consuming app's config
+    const applicationConfig = this.container.lookupFactory('config:environment'),
+          defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
+
+    if (applicationConfig &&
+        applicationConfig.emberFullCalendar &&
+        applicationConfig.emberFullCalendar.schedulerLicenseKey) {
+      return applicationConfig.emberFullCalendar.schedulerLicenseKey;
+    }
+
+    return defaultSchedulerLicenseKey;
+  }),
 
   fullCalendarOptions: [
     // general display
