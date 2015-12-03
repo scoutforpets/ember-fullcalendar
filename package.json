@@ -1,6 +1,6 @@
 {
   "name": "ember-fullcalendar",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An Ember Component for FullCalendar and FullCalendar Scheduler",
   "directories": {
     "doc": "doc",
