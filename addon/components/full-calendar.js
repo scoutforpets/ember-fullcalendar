@@ -129,8 +129,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
-    return Ember.$('.full-calendar')
-      .fullCalendar(options);
+    return this.$().fullCalendar(options);
   },
 
   /////////////////////////////////////
