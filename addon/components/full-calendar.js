@@ -47,9 +47,6 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
     'minTime', 'maxTime', 'slotEventOverlap',
 
-    // current date
-    'defaultDate',
-
     // text/time customization
     'lang', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
     'dayNamesShort', 'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
@@ -152,6 +149,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
       }
     });
 
+    if (this.get('date') !== undefined) {
+      options['defaultDate'] = this.get('date');
+    }
+
     return options;
   }),
 
@@ -184,6 +185,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
     });
 
     return actions;
+  }),
+
+  dateDidChange: Ember.observer('date', function() {
+    let date = this.get('date');
+    this.$().fullCalendar('gotoDate', date);
   })
 
 });
