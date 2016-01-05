@@ -6,9 +6,9 @@ module.exports = {
 
   included: function(app) {
 
-    app.import(app.bowerDirectory + '/fullcalendar/dist/fullcalendar.min.js');
-    app.import(app.bowerDirectory + '/fullcalendar/dist/fullcalendar.min.css');
-    app.import(app.bowerDirectory + '/fullcalendar-scheduler/dist/scheduler.min.js');
-    app.import(app.bowerDirectory + '/fullcalendar-scheduler/dist/scheduler.min.css');
+    app.import(app.bowerDirectory + '/fullcalendar/dist/fullcalendar.js');
+    app.import(app.bowerDirectory + '/fullcalendar/dist/fullcalendar.css');
+    app.import(app.bowerDirectory + '/fullcalendar-scheduler/dist/scheduler.js');
+    app.import(app.bowerDirectory + '/fullcalendar-scheduler/dist/scheduler.css');
   }
 };
