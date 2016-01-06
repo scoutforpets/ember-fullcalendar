@@ -123,7 +123,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     let options =
       Object.assign(
         this.get('options'),
-        this.get('actions')
+        this.get('hooks')
       );
 
     // add the license key for the scheduler
@@ -169,7 +169,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns an object that contains a function for each action passed
    * into the component. This object is passed into Fullcalendar.
    */
-  actions: Ember.computed(function() {
+  hooks: Ember.computed(function() {
     let actions = {};
 
     this.get('usedEvents').forEach((eventName) => {
