@@ -1,3 +1,11 @@
 <h2 id="title">Welcome to Ember</h2>
 
-{{outlet}}
+<ul>
+{{#each eventsArray as |event|}}
+  <li>{{event.title}} <button onclick={{action "removeEvent" event}}>x</button></li>
+{{/each}}
+</ul>
+
+{{input value=eventTitle}} <button onclick={{action "addEvent" event}}>Add</button>
+
+{{full-calendar events=eventsArray}}
