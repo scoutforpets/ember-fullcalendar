@@ -1,5 +1,8 @@
 # ember-fullcalendar [![Error Tracking](https://d26gfdfi90p7cf.cloudfront.net/rollbar-badge.144534.o.png)](https://rollbar.com)
 
+[![dependencies](https://david-dm.org/scoutforpets/ember-fullcalendar.svg)](https://david-dm.org/scoutforpets/ember-fullcalendar)
+
+
 **ember-fullcalendar** brings the power of [FullCalendar](http://fullcalendar.io/) and [FullCalendar Scheduler](http://fullcalendar.io/scheduler/) to Ember.
 
 ## Installation
@@ -19,7 +22,25 @@ This addon currently supports every option and callback currently available for 
 
 A simple example:
 
-```handlebars
+```javascript
+let events = Ember.A([{
+ title: 'Event 1',
+ start: '2016-05-05T07:08:08',
+ end: '2016-05-05T09:08:08'
+}, {
+ title: 'Event 2',
+ start: '2016-05-06T07:08:08',
+ end: '2016-05-07T09:08:08'
+}, {
+ title: 'Event 3',
+ start: '2016-05-10T07:08:08',
+ end: '2016-05-10T09:48:08'
+}, {
+ title: 'Event 4',
+ start: '2016-05-11T07:15:08',
+ end: '2016-05-11T09:08:08'
+}]);
+
 {{full-calendar events=events}}
 ```
 
