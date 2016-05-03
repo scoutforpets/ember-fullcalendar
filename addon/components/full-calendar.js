@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
-import { InvokeActionMixin } from 'ember-invoke-action';
+import {InvokeActionMixin} from 'ember-invoke-action';
+const {Component, computed, observer, run} = Ember;
 
-export default Ember.Component.extend(InvokeActionMixin, {
+export default Component.extend(InvokeActionMixin, {
 
   /////////////////////////////////////
   // PROPERTIES
@@ -16,15 +17,15 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
 
   // scheduler defaults to non-commercial license
-  schedulerLicenseKey: Ember.computed(function() {
+  schedulerLicenseKey: computed(function () {
 
     // load the consuming app's config
     const applicationConfig = this.container.lookupFactory('config:environment'),
-          defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
+      defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
 
     if (applicationConfig &&
-        applicationConfig.emberFullCalendar &&
-        applicationConfig.emberFullCalendar.schedulerLicenseKey) {
+      applicationConfig.emberFullCalendar &&
+      applicationConfig.emberFullCalendar.schedulerLicenseKey) {
       return applicationConfig.emberFullCalendar.schedulerLicenseKey;
     }
 
@@ -140,7 +141,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns all of the valid Fullcalendar options that
    * were passed into the component.
    */
-  options: Ember.computed(function() {
+  options: computed(function () {
 
     let fullCalendarOptions = this.get('fullCalendarOptions');
     let options = {};
@@ -158,25 +159,32 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns all of the valid Fullcalendar callback event
    * names that were passed into the component.
    */
-  usedEvents: Ember.computed('fullCalendarEvents', function() {
+  usedEvents: computed('fullCalendarEvents', function () {
     return this.get('fullCalendarEvents').filter(eventName => {
       let methodName = '_' + eventName;
       return this.get(methodName) !== undefined || this.get(eventName) !== undefined;
     });
   }),
 
+  updateEvents: observer('events.[]', function () {
+    const fullCalendarElement = this.$();
+    fullCalendarElement.fullCalendar('removeEvents');
+    fullCalendarElement.fullCalendar('addEventSource', this.get('events'));
+    fullCalendarElement.fullCalendar('rerenderEvents');
+  }),
+
   /**
    * Returns an object that contains a function for each action passed
    * into the component. This object is passed into Fullcalendar.
    */
-  hooks: Ember.computed(function() {
+  hooks: computed(function () {
     let actions = {};
 
     this.get('usedEvents').forEach((eventName) => {
 
       // create an event handler that runs the function inside an event loop.
       actions[eventName] = (...args) => {
-        Ember.run.schedule('actions', this, () => {
+        run.schedule('actions', this, () => {
           this.invokeAction(eventName, ...args, this.$());
         });
       };
