@@ -1,3 +1,7 @@
 <h2 id="title">Welcome to Ember</h2>
 
-{{outlet}}
+<button onclick={{action "changeView" "month"}}>Month</button>
+<button onclick={{action "changeView" "agendaWeek"}}>Week</button>
+<button onclick={{action "changeView" "agendaDay"}}>Day</button>
+
+{{full-calendar viewName=viewName}}
