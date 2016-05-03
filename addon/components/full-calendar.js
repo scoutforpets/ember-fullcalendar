@@ -2,6 +2,7 @@ import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
 const { get, isArray, getProperties } = Ember;
+import getOwner from 'ember-getowner-polyfill';
 
 export default Ember.Component.extend(InvokeActionMixin, {
 
@@ -20,7 +21,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   schedulerLicenseKey: Ember.computed(function() {
 
     // load the consuming app's config
-    const applicationConfig = this.container.lookupFactory('config:environment'),
+    const applicationConfig = getOwner(this)._lookupFactory('config:environment'),
           defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
 
     if (applicationConfig &&
@@ -259,6 +260,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     }
 
     this.$().fullCalendar('addEventSource', added);
+    this.$().fullCalendar('rerenderEvents');
   },
 
   eventObjectProperties: [

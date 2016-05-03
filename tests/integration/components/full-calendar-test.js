@@ -5,20 +5,20 @@ import hbs from 'htmlbars-inline-precompile';
 let getEventsArray = () => {
   return Ember.A([{
    title: 'Event 1',
-   start: '2016-01-05T07:08:08',
-   end: '2016-01-05T09:08:08'
+   start: '2016-05-05T07:08:08',
+   end: '2016-05-05T09:08:08'
   }, {
    title: 'Event 2',
-   start: '2016-01-06T07:08:08',
-   end: '2016-01-07T09:08:08'
+   start: '2016-05-06T07:08:08',
+   end: '2016-05-07T09:08:08'
   }, {
    title: 'Event 3',
-   start: '2016-01-10T07:08:08',
-   end: '2016-01-10T09:48:08'
+   start: '2016-05-10T07:08:08',
+   end: '2016-05-10T09:48:08'
   }, {
    title: 'Event 4',
-   start: '2016-01-11T07:15:08',
-   end: '2016-01-11T09:08:08'
+   start: '2016-05-11T07:15:08',
+   end: '2016-05-11T09:08:08'
  }]);
 };
 
@@ -56,12 +56,12 @@ test('replacing events rerenders events', function(assert) {
 
   this.set('eventsArray', Ember.A([{
    title: 'New Event 1',
-   start: '2016-01-05T07:08:08',
-   end: '2016-01-05T09:08:08'
+   start: '2016-05-05T07:08:08',
+   end: '2016-05-05T09:08:08'
   }, {
    title: 'New Event 2',
-   start: '2016-01-06T07:08:08',
-   end: '2016-01-07T09:08:08'
+   start: '2016-05-06T07:08:08',
+   end: '2016-05-07T09:08:08'
   }]));
 
   assert.equal(this.$('.fc-title').length, 2);
@@ -115,8 +115,8 @@ test('it adds events', function(assert) {
 
   eventsArray.insertAt(2, {
     title: 'New Event',
-    start: '2016-01-15T07:08:08',
-    end: '2016-01-15T09:08:08'
+    start: '2016-05-15T07:08:08',
+    end: '2016-05-15T09:08:08'
   });
 
   assert.equal(this.$('.fc-title').length, 5);
