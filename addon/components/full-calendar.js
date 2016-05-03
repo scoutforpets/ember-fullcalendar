@@ -50,7 +50,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'minTime', 'maxTime', 'slotEventOverlap',
 
     // current date
-    'defaultDate',
+    'defaultDate', 'nowIndicator',
 
     // text/time customization
     'lang', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
@@ -68,7 +68,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint',
+    'eventOverlap', 'eventConstraint', 'longPressDelay',
 
     // dropping external elements
     'droppable', 'dropAccept',
@@ -81,7 +81,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'resources', 'eventResourceField',
 
     // resource rendering
-    'resourceOrder', 'resourceGroupField', 'resourceGroupText'
+    'resourceOrder', 'resourceGroupField', 'resourceGroupText',
+
+    // vertical resource view
+    'groupByResource', 'groupByDateAndResource'
   ],
 
   fullCalendarEvents: [
