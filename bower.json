@@ -5,9 +5,8 @@
     "ember-cli-shims": "0.1.1",
     "ember-cli-test-loader": "0.2.2",
     "ember-qunit-notifications": "0.1.0",
-    "fullcalendar": "~2.5.0",
-    "fullcalendar-scheduler": "~1.1.0",
-    "moment": ">= 2.8.0 < 2.11.0",
-    "moment-timezone": ">= 0.1.0 <= 0.5.0"
+    "fullcalendar": "~2.7.1",
+    "fullcalendar-scheduler": "~1.3.1",
+    "moment": "~2.13.0"
   }
 }
