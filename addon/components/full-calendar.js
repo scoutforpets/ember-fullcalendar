@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
-const { get, isArray, getProperties } = Ember;
+const { get, isArray, getProperties, observer, computed } = Ember;
 import getOwner from 'ember-getowner-polyfill';
 
 export default Ember.Component.extend(InvokeActionMixin, {
@@ -18,7 +18,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
 
   // scheduler defaults to non-commercial license
-  schedulerLicenseKey: Ember.computed(function() {
+  schedulerLicenseKey: computed(function() {
 
     // load the consuming app's config
     const applicationConfig = getOwner(this)._lookupFactory('config:environment'),
@@ -60,7 +60,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint',
 
     // event data
-    'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
+    'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
     'defaultTimedEventDuration', 'defaultAllDayEventDuration', 'forceEventDuration',
 
     // event rendering
@@ -125,22 +125,22 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   didInsertElement() {
 
-    let options =
+    const options =
       Object.assign(
         this.get('options'),
         this.get('hooks')
       );
 
+    // Temporary patch for `eventDataTransform` method throwing error
+    options.eventDataTransform = this.get('eventDataTransform');
+
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
     this.$().fullCalendar(options);
-
-    this._eventsDidChange();
   },
 
   willDestroyElement() {
-    this._eventsWillChange(this.get('events'));
     this.$().fullCalendar('destroy');
   },
 
@@ -152,10 +152,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns all of the valid Fullcalendar options that
    * were passed into the component.
    */
-  options: Ember.computed(function() {
+  options: computed(function() {
 
-    let fullCalendarOptions = this.get('fullCalendarOptions');
-    let options = {};
+    const fullCalendarOptions = this.get('fullCalendarOptions');
+    const options = {};
 
     fullCalendarOptions.forEach(optionName => {
       if (this.get(optionName) !== undefined) {
@@ -170,9 +170,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns all of the valid Fullcalendar callback event
    * names that were passed into the component.
    */
-  usedEvents: Ember.computed('fullCalendarEvents', function() {
+  usedEvents: computed('fullCalendarEvents', function() {
     return this.get('fullCalendarEvents').filter(eventName => {
-      let methodName = '_' + eventName;
+      const methodName = `_${eventName}`;
       return this.get(methodName) !== undefined || this.get(eventName) !== undefined;
     });
   }),
@@ -181,8 +181,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns an object that contains a function for each action passed
    * into the component. This object is passed into Fullcalendar.
    */
-  hooks: Ember.computed(function() {
-    let actions = {};
+  hooks: computed(function() {
+    const actions = {};
 
     this.get('usedEvents').forEach((eventName) => {
 
@@ -198,90 +198,14 @@ export default Ember.Component.extend(InvokeActionMixin, {
   }),
 
   /**
-  * Ember observer triggered before the events property is changed
-  * We need to unbind any array observers
-  */
-  _eventsWillChange(events) {
-    if (isArray(events)) {
-      events.removeArrayObserver(this, {
-        willChange: '_eventsArrayWillChange',
-        didChange: '_eventsArrayDidChange'
-      });
-    }
-   //Trigger remove logic
-    var len = events ? get(events, 'length') : 0;
-    this._eventsArrayWillChange(events, 0, len);
-  },
-
-  /**
-  * Ember observer triggered when the events property is changed
-  * We need to bind an array observer to become notified of its changes
-  */
-  _eventsDidChange: Ember.observer('events', function() {
-    let events = this.get('events');
-
-    //simulate a "beforeObserver"
-    if (this._oldEvents !== events ) {
-      this._eventsWillChange(this._oldEvents);
-      this._oldEvents = events;
-    }
-
-    if (isArray(events)) {
-      events.addArrayObserver(this, {
-        willChange: '_eventsArrayWillChange',
-        didChange: '_eventsArrayDidChange'
-      });
-
-      var len = events ? get(events, 'length') : 0;
-      this._eventsArrayDidChange(events, 0, null, len);
-    }
-  }),
-
-  /*
-  * Triggered before the events array changes
-  * Here we process the removed elements
-  */
-  _eventsArrayWillChange(array, idx, removedCount) {
-    let removed = Ember.A();
-
-    for (var i = idx; i < idx + removedCount; i++) {
-      removed.pushObject(array.objectAt(i));
-    }
-
-    this.$().fullCalendar('removeEvents', eventObject => removed.contains(eventObject.originalObject));
-  },
-
-  /*
-  * Triggered after the events array changes
-  * Here we process the inserted elements
-  */
-  _eventsArrayDidChange(array, idx, removedCount, addedCount) {
-    let added = Ember.A();
-
-    for (var i = idx; i < idx + addedCount; i++) {
-      added.pushObject(this.createEventObject(array.objectAt(i)));
-    }
-
-    this.$().fullCalendar('addEventSource', added);
-    this.$().fullCalendar('rerenderEvents');
-  },
-
-  eventObjectProperties: [
-    'id', 'title', 'allDay', 'start', 'end', 'url', 'className', 'editable',
-    'startEditable', 'durationEditable', 'rendering', 'overlap', 'constraint',
-    'source', 'color', 'backgroundColor', 'borderColor', 'textColor'
-  ],
-
-  /**
-   * Create a wrapper event object to contain
-   * the original object. Fullcalendar creates new objects
-   * internally, so we can't compare by object reference later.
-   * The good thing is that this is overridable.
+   * Observe the events array for any changes and
+   * re-render if changes are detected
    */
-  createEventObject(data) {
-    let eventObject = getProperties(data, ...this.get('eventObjectProperties'));
-    eventObject.originalObject = data;
-    return eventObject;
-  }
+  observeEvents: observer('events.[]', function () {
+     const fc = this.$();
+     fc.fullCalendar('removeEvents');
+     fc.fullCalendar('addEventSource', this.get('events'));
+     fc.fullCalendar('rerenderEvents');
+  }),
 
 });
