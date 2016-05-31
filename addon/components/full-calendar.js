@@ -65,6 +65,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event rendering
     'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'nextDayThreshold', 'eventOrder',
+    'eventLimitClick',
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
