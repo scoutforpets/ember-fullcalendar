@@ -8,4 +8,11 @@
 
 {{input value=eventTitle}} <button onclick={{action "addEvent" event}}>Add</button>
 
-{{full-calendar events=eventsArray}}
+<h3>Change Calendar View</h3>
+<button onclick={{action "changeView" "month"}}>Month</button>
+<button onclick={{action "changeView" "agendaWeek"}}>Week</button>
+<button onclick={{action "changeView" "agendaDay"}}>Day</button>
+<br/>
+<br/>
+
+{{full-calendar events=eventsArray viewName=viewName}}

@@ -21,8 +21,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
   schedulerLicenseKey: computed(function() {
 
     // load the consuming app's config
-    const applicationConfig = getOwner(this)._lookupFactory('config:environment'),
-          defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
+    const applicationConfig = getOwner(this)._lookupFactory('config:environment');
+    const defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
 
     if (applicationConfig &&
         applicationConfig.emberFullCalendar &&
@@ -43,7 +43,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'timezone', 'now',
 
     // views
-    'views', 'defaultView',
+    'views',
 
     // agenda options
     'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
@@ -158,11 +158,17 @@ export default Ember.Component.extend(InvokeActionMixin, {
     const fullCalendarOptions = this.get('fullCalendarOptions');
     const options = {};
 
+    // Apply FullCalendar options based on property name
     fullCalendarOptions.forEach(optionName => {
       if (this.get(optionName) !== undefined) {
         options[optionName] = this.get(optionName);
       }
     });
+
+    // Handle overriden properties
+    if (this.get('viewName') !== undefined) {
+      options['defaultView'] = this.get('viewName');
+    }
 
     return options;
   }),
@@ -198,6 +204,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
     return actions;
   }),
 
+  /////////////////////////////////////
+  // OBSERVERS
+  /////////////////////////////////////
+
   /**
    * Observe the events array for any changes and
    * re-render if changes are detected
@@ -208,5 +218,14 @@ export default Ember.Component.extend(InvokeActionMixin, {
      fc.fullCalendar('addEventSource', this.get('events'));
      fc.fullCalendar('rerenderEvents');
   }),
+
+  /**
+   * Observes the 'viewName' property allowing FullCalendar view to be
+   * changed from outside of the component.
+   */
+  viewNameDidChange: Ember.observer('viewName', function() {
+    const viewName = this.get('viewName');
+    this.$().fullCalendar('changeView', viewName);
+  })
 
 });
