@@ -16,7 +16,7 @@ To install it run:
 ## Overview
 This addon currently supports every option and callback currently available for FullCalendar 2.0. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
-*NOTE:* This addon installs both FullCalendar and the new FullCalendar Scheduler addon. While you aren't required to use the Scheduler, it is currently packaged. In the future, there may be an option to disable importing the Scheduler if it's not needed.
+*NOTE:* By default, this addon installs and imports both FullCalendar and the FullCalendar Scheduler addon. You may opt out of importing the FullCalendar Scheduler addon if it's not needed.
 
 ## Usage
 
@@ -102,11 +102,30 @@ export default Ember.Controller.extend({
 });
 ```
 
-## FullCalendar Scheduler License
+## FullCalendar Scheduler
+
+### Opting out
+By default, the FullCalendar Scheduler addon is imported. To opt out, add the following to your application's `ember-cli-build.js`:
+```javascript
+  var app = new EmberApp(defaults, {
+    emberFullCalendar: {
+      scheduler: false
+    }
+    // Other options here, as needed.
+  });
+```
+
+### License
 By default, the addon uses the [Free Trial License Key](http://fullcalendar.io/scheduler/download/) provided by FullCalendar. If you have a paid license key, you may set it by explicitly passing it into the component as `schedulerLicenseKey` or, the better option, is to set it in your `config/environment.js` file like so:
 
 ```javascript
 	emberFullCalendar: {
 		schedulerLicenseKey: '<your license key>'
 	}
+```
+
+### Moment
+While not required by `ember-fullcalendar`, you may find it helpful to be able to import moment via ES6. Install [`ember-cli-moment-shims`](https://www.npmjs.com/package/ember-cli-moment-shim) to enable:
+```javascript
+import moment from 'moment';
 ```
