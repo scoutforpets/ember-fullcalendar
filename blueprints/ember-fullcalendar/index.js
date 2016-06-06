@@ -2,10 +2,8 @@ module.exports = {
   normalizeEntityName: function() {},
 
   afterInstall: function() {
-    return this.addBowerPackageToProject('fullcalendar').then(() => {
-      return this.addBowerPackageToProject('fullcalendar-scheduler').then(() => {
-        return this.addAddonToProject('ember-cli-moment-shim', '0.6.2');
-      });
+    return this.addBowerPackageToProject('fullcalendar', '^2.7.3').then(() => {
+      return this.addBowerPackageToProject('fullcalendar-scheduler', '^1.3.2');
     });
   }
 };
