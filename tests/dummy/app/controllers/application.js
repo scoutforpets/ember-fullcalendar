@@ -3,7 +3,8 @@ const { Controller } = Ember;
 
 export default Controller.extend({
 
-  viewName: 'agendaWeek',
+  startDate: null,
+  viewName: 'basicDay',
 
   eventsArray: Ember.A([{
      //id: 1,
@@ -43,6 +44,12 @@ export default Controller.extend({
 
      changeView(viewName) {
        this.set('viewName', viewName);
+     },
+
+     changeDate() {
+       const newDate = new Date();
+       newDate.setDate(newDate.getDate() + 7);
+       this.set('startDate', newDate);
      }
    }
 

@@ -50,7 +50,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'minTime', 'maxTime', 'slotEventOverlap',
 
     // current date
-    'defaultDate', 'nowIndicator',
+    'nowIndicator',
 
     // text/time customization
     'lang', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
@@ -170,6 +170,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
       options['defaultView'] = this.get('viewName');
     }
 
+    if (this.get('date') !== undefined) {
+      options['defaultDate'] = this.get('date');
+    }
+
     return options;
   }),
 
@@ -204,6 +208,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     return actions;
   }),
 
+
   /////////////////////////////////////
   // OBSERVERS
   /////////////////////////////////////
@@ -226,6 +231,15 @@ export default Ember.Component.extend(InvokeActionMixin, {
   viewNameDidChange: Ember.observer('viewName', function() {
     const viewName = this.get('viewName');
     this.$().fullCalendar('changeView', viewName);
+  }),
+
+  /**
+   * Observes `date` property allowing date to be changed from outside
+   * of the component.
+   */
+  dateDidChange: Ember.observer('date', function() {
+    let date = this.get('date');
+    this.$().fullCalendar('gotoDate', date);
   })
 
 });
