@@ -103,6 +103,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event rendering
     'eventRender', 'eventAfterRender', 'eventAfterAllRender', 'eventDestroy',
+    'eventLimitClick',
 
     // event dragging & resizing
     'eventDragStart', 'eventDragStop', 'eventDrop', 'eventResizeStart', 'eventResizeStop', 'eventResize',
