@@ -74,8 +74,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'droppable', 'dropAccept',
 
     // timeline view
-    'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth', 'slotDuration', 'slotLabelFormat',
-    'slotLabelInterval', 'snapDuration', 'minTime', 'maxTime', 'scrollTime',
+    'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth',
 
     // resource data
     'resources', 'eventResourceField',
@@ -109,12 +108,6 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // dropping external events
     'drop', 'eventReceive',
-
-    // timeline view
-    'dayClick',
-
-    // resource data
-    'loading',
 
     // resource rendering
     'resourceText', 'resourceRender'
