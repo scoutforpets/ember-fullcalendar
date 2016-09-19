@@ -238,7 +238,18 @@ export default Ember.Component.extend(InvokeActionMixin, {
      const fc = this.$();
      fc.fullCalendar('removeEvents');
      fc.fullCalendar('addEventSource', this.get('events'));
-     fc.fullCalendar('rerenderEvents');
+  }),
+
+  /**
+   * Observe the eventSources array for any changes and
+   * re-render if changes are detected
+   */
+  observeEventSources: observer('eventSources.[]', function () {
+     const fc = this.$();
+     fc.fullCalendar('removeEventSources');
+     this.get('eventSources').forEach(function(source,i,arr){
+       fc.fullCalendar('addEventSource', source);
+     });
   }),
 
   /**
