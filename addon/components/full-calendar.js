@@ -37,7 +37,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // general display
     'header', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
     'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
-    'handleWindowResize', 'eventLimit',
+    'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays',
+
+    // clicking & hovering
+    'navLinks',
 
     // timezone
     'timezone', 'now',
@@ -49,15 +52,19 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
     'minTime', 'maxTime', 'slotEventOverlap',
 
+    // list options
+    'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
+
     // current date
     'nowIndicator',
 
     // text/time customization
-    'lang', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
+    'locale', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
     'dayNamesShort', 'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
 
     // selection
     'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint',
+    'selectAllow',
 
     // event data
     'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
@@ -68,7 +75,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint', 'longPressDelay',
+    'eventOverlap', 'eventConstraint', 'longPressDelay', 'eventAllow',
 
     // dropping external elements
     'droppable', 'dropAccept',
@@ -91,7 +98,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'viewRender', 'viewDestroy', 'dayRender', 'windowResize',
 
     // clicking and hovering
-    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout',
+    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout', 'navLinkDayClick', 'navLinkWeekClick',
 
     // selection
     'select', 'unselect',
