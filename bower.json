@@ -1,12 +1,12 @@
 {
   "name": "ember-fullcalendar",
   "dependencies": {
-    "ember": "~2.6.0-beta.2",
+    "ember": "~2.8.0",
     "ember-cli-shims": "0.1.1",
     "ember-cli-test-loader": "0.2.2",
     "ember-qunit-notifications": "0.1.0",
-    "fullcalendar": "^2.7.3",
-    "fullcalendar-scheduler": "~1.3.2",
-    "moment": "~2.13.0"
+    "fullcalendar": "^3.0.0",
+    "fullcalendar-scheduler": "^1.4.0",
+    "moment": "^2.9.0"
   }
 }

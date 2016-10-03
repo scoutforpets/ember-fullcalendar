@@ -60,8 +60,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
   fullCalendarOptions: [
     // general display
     'header', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
-    'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'weekNumbersWithinDays', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
-    'handleWindowResize', 'eventLimit',
+    'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
+    'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays',
+
+    // clicking & hovering
+    'navLinks',
 
     // timezone
     'timezone', 'now',
@@ -72,6 +75,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // agenda options
     'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
     'minTime', 'maxTime', 'slotEventOverlap',
+
+    // list options
+    'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
 
     // current date
     'nowIndicator',
@@ -115,7 +121,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'viewRender', 'viewDestroy', 'dayRender', 'windowResize',
 
     // clicking and hovering
-    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout',
+    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout', 'navLinkDayClick', 'navLinkWeekClick',
 
     // selection
     'select', 'unselect',
