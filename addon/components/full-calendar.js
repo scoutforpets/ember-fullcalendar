@@ -4,6 +4,30 @@ import { InvokeActionMixin } from 'ember-invoke-action';
 const { get, isArray, getProperties, observer, computed } = Ember;
 import getOwner from 'ember-getowner-polyfill';
 
+
+// We need IE Support so using a polyfill for Object.assign
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
+if (typeof Object.assign != 'function') {
+  Object.assign = function(target) {
+    'use strict';
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object');
+    }
+    target = Object(target);
+    for (var index = 1; index < arguments.length; index++) {
+      var source = arguments[index];
+      if (source != null) {
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
+      }
+    }
+    return target;
+  };
+}
+
 export default Ember.Component.extend(InvokeActionMixin, {
 
   /////////////////////////////////////
@@ -36,7 +60,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   fullCalendarOptions: [
     // general display
     'header', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
-    'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
+    'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'weekNumbersWithinDays', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
     'handleWindowResize', 'eventLimit',
 
     // timezone
@@ -53,11 +77,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'nowIndicator',
 
     // text/time customization
-    'lang', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
+    'locale', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
     'dayNamesShort', 'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
 
     // selection
-    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint',
+    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
 
     // event data
     'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
@@ -68,7 +92,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint', 'longPressDelay',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay',
 
     // dropping external elements
     'droppable', 'dropAccept',
@@ -214,7 +238,18 @@ export default Ember.Component.extend(InvokeActionMixin, {
      const fc = this.$();
      fc.fullCalendar('removeEvents');
      fc.fullCalendar('addEventSource', this.get('events'));
-     fc.fullCalendar('rerenderEvents');
+  }),
+
+  /**
+   * Observe the eventSources array for any changes and
+   * re-render if changes are detected
+   */
+  observeEventSources: observer('eventSources.[]', function () {
+     const fc = this.$();
+     fc.fullCalendar('removeEventSources');
+     this.get('eventSources').forEach(function(source,i,arr){
+       fc.fullCalendar('addEventSource', source);
+     });
   }),
 
   /**
