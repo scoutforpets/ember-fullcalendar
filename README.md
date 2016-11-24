@@ -68,6 +68,18 @@ Where possible, this addon takes advantage of DDAU (Data Down, Actions Up) to al
 
 - `date` _(replaces `defaultDate`)_ - allows you to change the date from outside of the component.
 
+### Event changes
+When an event can be changed from outside the calendar you need to convert the events to Ember.Objects.
+
+let events = Ember.A([
+Ember.Object.create({
+ title: 'Event 1',
+ start: '2016-05-05T07:08:08',
+ end: '2016-05-05T09:08:08'
+})]);
+
+events[0].set('title', 'My new event title');
+
 ### FullCalendar Callbacks
 All FullCalendar and FullCalendar Scheduler callbacks are supported and can be handled using Ember Actions. Here's a simple example:
 
