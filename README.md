@@ -71,6 +71,7 @@ Where possible, this addon takes advantage of DDAU (Data Down, Actions Up) to al
 ### Event changes
 When an event can be changed from outside the calendar you need to convert the events to Ember.Objects.
 
+```javascript
 let events = Ember.A([
 Ember.Object.create({
  title: 'Event 1',
@@ -79,6 +80,7 @@ Ember.Object.create({
 })]);
 
 events[0].set('title', 'My new event title');
+```
 
 ### FullCalendar Callbacks
 All FullCalendar and FullCalendar Scheduler callbacks are supported and can be handled using Ember Actions. Here's a simple example:
