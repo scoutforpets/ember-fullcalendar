@@ -1,13 +1,13 @@
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
-const { get, isArray, getProperties, observer, computed } = Ember;
+const { observer, computed } = Ember;
 import getOwner from 'ember-getowner-polyfill';
 
 
 // We need IE Support so using a polyfill for Object.assign
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
-if (typeof Object.assign != 'function') {
+if (typeof Object.assign !== 'function') {
   Object.assign = function(target) {
     'use strict';
     if (target == null) {
@@ -16,7 +16,7 @@ if (typeof Object.assign != 'function') {
     target = Object(target);
     for (var index = 1; index < arguments.length; index++) {
       var source = arguments[index];
-      if (source != null) {
+      if (source !== null) {
         for (var key in source) {
           if (Object.prototype.hasOwnProperty.call(source, key)) {
             target[key] = source[key];
@@ -59,7 +59,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   fullCalendarOptions: [
     // general display
-    'header', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
+    'header', 'footer', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
     'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
     'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays',
 
@@ -95,10 +95,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event rendering
     'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'nextDayThreshold', 'eventOrder',
+    'eventRenderWait',
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay', 'selectLongPressDelay',
 
     // dropping external elements
     'droppable', 'dropAccept',
@@ -107,10 +108,10 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth',
 
     // resource data
-    'resources', 'eventResourceField',
+    'resources', 'eventResourceField', 'refetchResourcesOnNavigate',
 
     // resource rendering
-    'resourceOrder', 'resourceGroupField', 'resourceGroupText',
+    'resourceOrder', 'resourceGroupField', 'resourceGroupText', 'filterResourcesWithEvents',
 
     // vertical resource view
     'groupByResource', 'groupByDateAndResource'
@@ -253,7 +254,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   observeEventSources: observer('eventSources.[]', function () {
      const fc = this.$();
      fc.fullCalendar('removeEventSources');
-     this.get('eventSources').forEach(function(source,i,arr){
+     this.get('eventSources').forEach(function(source){
        fc.fullCalendar('addEventSource', source);
      });
   }),
