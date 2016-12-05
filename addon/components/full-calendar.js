@@ -241,7 +241,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Observe the events array for any changes and
    * re-render if changes are detected
    */
-  observeEvents: observer('events.[]', function () {
+  observeEvents: observer('events.[]', 'events.@each.{start,end,title,color,allDay,url,className,editable,startEditable,durationEditable,resourceEditable,rendering,overlap,constraint,source,backgroundColor,borderColor,textColor}', function () {
      const fc = this.$();
      fc.fullCalendar('removeEvents');
      fc.fullCalendar('addEventSource', this.get('events'));
