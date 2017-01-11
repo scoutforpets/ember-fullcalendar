@@ -215,14 +215,21 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   /**
    * Observe the events array for any changes and
-   * re-render if changes are detected
+   * re-render if changes are detected. Debounce events as we are watching all the event properties which can generate a lot of re-renders.
    */
-  observeEvents: observer('events.[]', function () {
+  observeEvents: observer('events.[]', 'events.@each.{start,end,title,color,allDay,url,className,editable,startEditable,durationEditable,resourceEditable,rendering,overlap,constraint,source,backgroundColor,borderColor,textColor}', function () {
+     Ember.run.debounce(this, this.rerenderEvents, 50);
+  }),
+
+  /**
+   * removes and adds the events to the calendar
+   */
+  rerenderEvents: function () {
      const fc = this.$();
      fc.fullCalendar('removeEvents');
      fc.fullCalendar('addEventSource', this.get('events'));
-  }),
-
+  },
+  
   /**
    * Observe the eventSources array for any changes and
    * re-render if changes are detected
