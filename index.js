@@ -4,9 +4,9 @@
 module.exports = {
   name: 'ember-fullcalendar',
 
-  isDevelopingAddon: function() {
-    return true;
-  },
+  // isDevelopingAddon: function() {
+  //   return true;
+  // },
 
   included: function(app) {
 
