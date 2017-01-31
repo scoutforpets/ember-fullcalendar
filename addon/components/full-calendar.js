@@ -260,6 +260,16 @@ export default Ember.Component.extend(InvokeActionMixin, {
   }),
 
   /**
+   * Observes the resources array and refreshes the resource view
+   * if any changes are detected
+   * @type {[type]}
+   */
+  observeResources: observer('resources.[]', function() {
+    const fc = this.$();
+    fc.fullCalendar('refetchResources');
+  }),
+
+  /**
    * Observes the 'viewName' property allowing FullCalendar view to be
    * changed from outside of the component.
    */
