@@ -131,9 +131,3 @@ By default, the addon uses the [Free Trial License Key](http://fullcalendar.io/s
 		schedulerLicenseKey: '<your license key>'
 	}
 ```
-
-### Moment
-While not required by `ember-fullcalendar`, you may find it helpful to be able to import moment via ES6. Install [`ember-cli-moment-shims`](https://www.npmjs.com/package/ember-cli-moment-shim) to enable:
-```javascript
-import moment from 'moment';
-```

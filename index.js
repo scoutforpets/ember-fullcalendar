@@ -4,6 +4,10 @@
 module.exports = {
   name: 'ember-fullcalendar',
 
+  isDevelopingAddon: function() {
+    return true;
+  },
+
   included: function(app) {
 
     app.import(app.bowerDirectory + '/fullcalendar/dist/fullcalendar.js');
