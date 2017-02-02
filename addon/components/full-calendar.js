@@ -1,8 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
-const { observer, computed } = Ember;
-import getOwner from 'ember-getowner-polyfill';
+const { observer, computed, getOwner } = Ember;
 
 
 // We need IE Support so using a polyfill for Object.assign
