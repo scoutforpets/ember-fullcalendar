@@ -252,6 +252,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
   viewNameDidChange: Ember.observer('viewName', function() {
     const viewName = this.get('viewName');
     this.$().fullCalendar('changeView', viewName);
+
+    // Call action if it exists
+    if (this.get('onViewChange')) {
+      this.get('onViewChange')(viewName);
+    }
   }),
 
   /**
