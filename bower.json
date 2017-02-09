@@ -1,10 +1,4 @@
 {
   "name": "ember-fullcalendar",
-  "dependencies": {
-    "ember-cli-test-loader": "0.2.2",
-    "ember-qunit-notifications": "0.1.0",
-    "fullcalendar": "^3.1.0",
-    "fullcalendar-scheduler": "^1.5.0",
-    "moment": "^2.17.1"
-  }
+  "dependencies": {}
 }
