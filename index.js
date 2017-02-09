@@ -8,17 +8,31 @@ module.exports = {
   //   return true;
   // },
 
-  included: function(app) {
+  options: {
+    nodeAssets: {
+      'fullcalendar': {
+        srcDir: 'dist',
+        import: ['fullcalendar.js', 'fullcalendar.css']
+      },
+      'fullcalendar-scheduler': function() {
+        return {
+          enabled: this.includeScheduler || true,
+          srcDir: 'dist',
+          import: ['scheduler.js', 'scheduler.css']
+        }
+      }
+    }
+  },
 
-    app.import(app.bowerDirectory + '/fullcalendar/dist/fullcalendar.js');
-    app.import(app.bowerDirectory + '/fullcalendar/dist/fullcalendar.css');
+  included: function(app) {
 
     // Add scheduler to executable unless configured not to.
     if (!app.options ||
         !app.options.emberFullCalendar ||
         app.options.emberFullCalendar.scheduler === undefined || app.options.emberFullCalendar.scheduler) {
-      app.import(app.bowerDirectory + '/fullcalendar-scheduler/dist/scheduler.js');
-      app.import(app.bowerDirectory + '/fullcalendar-scheduler/dist/scheduler.css');
+        this.includeScheduler = false;
     }
+
+    this._super.included.apply(this, arguments);
   }
 };
