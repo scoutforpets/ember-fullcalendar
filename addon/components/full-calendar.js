@@ -2,7 +2,6 @@ import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
 const { observer, computed } = Ember;
-import getOwner from 'ember-getowner-polyfill';
 
 
 // We need IE Support so using a polyfill for Object.assign
@@ -45,7 +44,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   schedulerLicenseKey: computed(function() {
 
     // load the consuming app's config
-    const applicationConfig = getOwner(this)._lookupFactory('config:environment');
+    const applicationConfig = Ember.getOwner(this)._lookupFactory('config:environment');
     const defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
 
     if (applicationConfig &&
