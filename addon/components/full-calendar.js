@@ -36,8 +36,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
   fullCalendarOptions: [
     // general display
     'header', 'footer', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
-    'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
-    'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays',
+    'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'weekNumbersWithinDays', 'businessHours', 'showNonCurrentDates', 'height', 'contentHeight', 'aspectRatio',
+    'handleWindowResize', 'eventLimit',
 
     // clicking & hovering
     'navLinks',
@@ -56,17 +56,17 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
 
     // current date
-    'nowIndicator',
+    'nowIndicator', 'visibleRange', 'validRange', 'dateIncrement', 'dateAlignment', 'duration', 'dayCount',
 
     // text/time customization
     'locale', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
     'dayNamesShort', 'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
 
     // selection
-    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
+    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow', 'selectMinDistance', 'selectLongPressDelay',
 
     // event data
-    'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
+    'events', 'eventSources', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
     'defaultTimedEventDuration', 'defaultAllDayEventDuration', 'forceEventDuration',
 
     // event rendering
@@ -75,7 +75,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay', 'selectLongPressDelay',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay',
 
     // dropping external elements
     'droppable', 'dropAccept',
