@@ -21,7 +21,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   schedulerLicenseKey: computed(function() {
 
     // load the consuming app's config
-    const applicationConfig = getOwner(this)._lookupFactory('config:environment');
+    const applicationConfig = getOwner(this).resolveRegistration('config:environment');
     const defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
 
     if (applicationConfig &&
