@@ -20,4 +20,8 @@
 <br/>
 <br/>
 
-{{full-calendar events=eventsArray viewName=viewName date=startDate}}
+{{#if fastboot.isFastBoot}}
+  loading...
+{{else}}
+  {{full-calendar events=eventsArray viewName=viewName date=startDate}}
+{{/if}}

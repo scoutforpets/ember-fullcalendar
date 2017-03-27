@@ -3,6 +3,8 @@ const { Controller } = Ember;
 
 export default Controller.extend({
 
+  fastboot: Ember.inject.service(),
+
   startDate: null,
   viewName: 'basicDay',
 
