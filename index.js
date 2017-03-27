@@ -10,13 +10,16 @@ module.exports = {
 
   options: {
     nodeAssets: {
-      'fullcalendar': {
-        srcDir: 'dist',
-        import: ['fullcalendar.js', 'fullcalendar.css']
+      'fullcalendar': function() {
+        return {
+          enabled: !process.env.EMBER_CLI_FASTBOOT,
+          srcDir: 'dist',
+          import: ['fullcalendar.js', 'fullcalendar.css']
+        }
       },
       'fullcalendar-scheduler': function() {
         return {
-          enabled: this.includeScheduler,
+          enabled: !process.env.EMBER_CLI_FASTBOOT && this.includeScheduler,
           srcDir: 'dist',
           import: ['scheduler.js', 'scheduler.css']
         }
