@@ -12,13 +12,13 @@ module.exports = {
     nodeAssets: {
       'fullcalendar': {
         srcDir: 'dist',
-        import: ['fullcalendar.js', 'fullcalendar.css']
+        import: ['fullcalendar.js', 'locale-all.js', 'fullcalendar.css']
       },
       'fullcalendar-scheduler': function() {
         return {
           enabled: this.includeScheduler,
           srcDir: 'dist',
-          import: ['scheduler.js', 'scheduler.css']
+          import: ['scheduler.js', 'locale-all.js', 'scheduler.css']
         }
       }
     }
@@ -29,7 +29,7 @@ module.exports = {
     // Add scheduler to executable unless configured not to.
     if (!app.options ||
         !app.options.emberFullCalendar ||
-        app.options.emberFullCalendar.scheduler === undefined || 
+        app.options.emberFullCalendar.scheduler === undefined ||
         app.options.emberFullCalendar.scheduler === false) {
         this.includeScheduler = false;
     } else {
