@@ -37,7 +37,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // general display
     'header', 'footer', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
     'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
-    'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays',
+    'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
 
     // clicking & hovering
     'navLinks',
@@ -56,7 +56,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
 
     // current date
-    'nowIndicator',
+    'nowIndicator', 'visibleRange', 'validRange', 'dateIncrement', 'dateAlignment', 'duration', 'dayCount',
 
     // text/time customization
     'locale', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
@@ -64,6 +64,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // selection
     'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
+    'selectMinDistance', 'selectLongPressDelay',
 
     // event data
     'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
@@ -75,7 +76,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay', 'selectLongPressDelay',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay',
 
     // dropping external elements
     'droppable', 'dropAccept',
@@ -251,11 +252,12 @@ export default Ember.Component.extend(InvokeActionMixin, {
    */
   viewNameDidChange: Ember.observer('viewName', function() {
     const viewName = this.get('viewName');
-    this.$().fullCalendar('changeView', viewName);
+    const viewRange = this.get('viewRange');
+    this.$().fullCalendar('changeView', viewName, viewRange);
 
     // Call action if it exists
     if (this.get('onViewChange')) {
-      this.get('onViewChange')(viewName);
+      this.get('onViewChange')(viewName, viewRange);
     }
   }),
 
