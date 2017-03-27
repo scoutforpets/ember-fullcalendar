@@ -116,16 +116,19 @@ export default Ember.Controller.extend({
 
 ## FullCalendar Scheduler
 
-### Opting out
-By default, the FullCalendar Scheduler addon is imported. To opt out, add the following to your application's `ember-cli-build.js`:
+### Opting In
+By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `ember-cli-build.js`:
 ```javascript
   var app = new EmberApp(defaults, {
     emberFullCalendar: {
-      scheduler: false
+      includeScheduler: true
     }
     // Other options here, as needed.
   });
 ```
+
+## Fastboot Support
+This addon now has minimal Fastboot support via #46.
 
 ### License
 By default, the addon uses the [Free Trial License Key](http://fullcalendar.io/scheduler/download/) provided by FullCalendar. If you have a paid license key, you may set it by explicitly passing it into the component as `schedulerLicenseKey` or, the better option, is to set it in your `config/environment.js` file like so:

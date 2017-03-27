@@ -27,18 +27,23 @@ module.exports = {
     }
   },
 
-  included: function(app) {
+  included: function(app, parentAddon) {
 
-    // Add scheduler to executable unless configured not to.
-    if (!app.options ||
-        !app.options.emberFullCalendar ||
-        app.options.emberFullCalendar.scheduler === undefined || 
-        app.options.emberFullCalendar.scheduler === false) {
-        this.includeScheduler = false;
-    } else {
-      this.includeScheduler = true;
+    var target = parentAddon || app;
+
+    // allow addon to be nested - see: https://github.com/ember-cli/ember-cli/issues/3718
+    if (target.app) {
+      target = target.app;
     }
 
+    var config = target.project.config(target.env) || {};
+
+    // Add scheduler to executable unless configured not to.
+    if (config.emberFullCalendar && config.emberFullCalendar.includeScheduler === true) {
+      this.includeScheduler = true;
+    } else {
+      this.includeScheduler = false;
+    }
 
     this._super.included.apply(this, arguments);
   }
