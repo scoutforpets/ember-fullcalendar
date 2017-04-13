@@ -125,7 +125,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   // SETUP/TEARDOWN
   /////////////////////////////////////
 
-  didInsertElement() {
+  didReceiveAttrs() {
 
     const options =
       assign(
