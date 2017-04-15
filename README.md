@@ -139,6 +139,16 @@ By default, only English locale is available. If you need to use other locales, 
   });
 ```
 
+Or, if you need ALL the locales, you can do the following:
+```javascript
+  var app = new EmberApp(defaults, {
+    emberFullCalendar: {
+      includeLocales: 'all'
+    }
+    // Other options here, as needed.
+  });
+```
+
 Then, you can set the fullcalendar language by using the `locale` option:
 
 ```handlebars

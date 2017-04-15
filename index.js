@@ -43,6 +43,8 @@ module.exports = {
       this.includeLocalesFiles = config.emberFullCalendar.includeLocales.map(function(localeCode) {
         return 'locale/' + localeCode + '.js';
       });
+    } else if(config.emberFullCalendar.includeLocales === "all") {
+      this.includeLocalesFiles = ['locale-all.js'];
     } else {
       this.includeLocalesFiles = [];
     }
