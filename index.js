@@ -14,7 +14,7 @@ module.exports = {
         return {
           enabled: !process.env.EMBER_CLI_FASTBOOT,
           srcDir: 'dist',
-          import: ['fullcalendar.js', 'fullcalendar.css']
+          import: ['fullcalendar.js', 'fullcalendar.css'].concat(this.includeLocalesFiles)
         }
       },
       'fullcalendar-scheduler': function() {
@@ -37,6 +37,15 @@ module.exports = {
     }
 
     var config = target.project.config(target.env) || {};
+
+    // include locale files
+    if(config.emberFullCalendar && Array.isArray(config.emberFullCalendar.includeLocales)) {
+      this.includeLocalesFiles = config.emberFullCalendar.includeLocales.map(function(localeCode) {
+        return 'locale/' + localeCode + '.js';
+      });
+    } else {
+      this.includeLocalesFiles = [];
+    }
 
     // Add scheduler to executable unless configured not to.
     if (config.emberFullCalendar && config.emberFullCalendar.includeScheduler === true) {
