@@ -39,12 +39,16 @@ module.exports = {
     var config = target.project.config(target.env) || {};
 
     // include locale files
-    if(config.emberFullCalendar && Array.isArray(config.emberFullCalendar.includeLocales)) {
-      this.includeLocalesFiles = config.emberFullCalendar.includeLocales.map(function(localeCode) {
-        return 'locale/' + localeCode + '.js';
-      });
-    } else if(config.emberFullCalendar.includeLocales === "all") {
-      this.includeLocalesFiles = ['locale-all.js'];
+    if(config.emberFullCalendar && config.emberFullCalendar.includeLocales) {
+      if(Array.isArray(config.emberFullCalendar.includeLocales)) {
+        this.includeLocalesFiles = config.emberFullCalendar.includeLocales.map(function(localeCode) {
+          return 'locale/' + localeCode + '.js';
+        });
+      } else if(config.emberFullCalendar.includeLocales === "all") {
+        this.includeLocalesFiles = ['locale-all.js'];
+      } else {
+        this.includeLocalesFiles = [];
+      }
     } else {
       this.includeLocalesFiles = [];
     }
