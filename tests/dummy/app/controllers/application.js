@@ -3,6 +3,11 @@ const { Controller } = Ember;
 
 export default Controller.extend({
 
+  fastboot: Ember.inject.service(),
+
+  startDate: null,
+  viewName: 'basicDay',
+
   eventsArray: Ember.A([{
      //id: 1,
      title: 'Event 1',
@@ -37,6 +42,16 @@ export default Controller.extend({
 
      removeEvent(e) {
        this.get('eventsArray').removeObject(e);
+     },
+
+     changeView(viewName) {
+       this.set('viewName', viewName);
+     },
+
+     changeDate() {
+       const newDate = new Date();
+       newDate.setDate(newDate.getDate() + 7);
+       this.set('startDate', newDate);
      }
    }
 

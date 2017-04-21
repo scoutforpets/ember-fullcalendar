@@ -1,4 +1,4 @@
-# ember-fullcalendar [![Error Tracking](https://d26gfdfi90p7cf.cloudfront.net/rollbar-badge.144534.o.png)](https://rollbar.com)
+# ember-fullcalendar
 
 [![dependencies](https://david-dm.org/scoutforpets/ember-fullcalendar.svg)](https://david-dm.org/scoutforpets/ember-fullcalendar) [![npm version](https://badge.fury.io/js/ember-fullcalendar.svg)](https://badge.fury.io/js/ember-fullcalendar)
 
@@ -14,9 +14,9 @@ To install it run:
 ```ember install ember-fullcalendar```
 
 ## Overview
-This addon currently supports every option and callback currently available for FullCalendar 2.0. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
+This addon currently supports every option and callback currently available for FullCalendar 3.0 and FullCalendar Scheduler 1.4.0. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
-*NOTE:* This addon installs both FullCalendar and the new FullCalendar Scheduler addon. While you aren't required to use the Scheduler, it is currently packaged. In the future, there may be an option to disable importing the Scheduler if it's not needed.
+*NOTE:* By default, this addon installs and imports both FullCalendar and the FullCalendar Scheduler addon. You may opt out of importing the FullCalendar Scheduler addon if it's not needed.
 
 ## Usage
 
@@ -60,6 +60,18 @@ export default Ember.Controller.extend({
 });
 ```
 
+### DDAU
+
+Where possible, this addon takes advantage of DDAU (Data Down, Actions Up) to allow your Ember app to interact with FullCalendar from outside of the component. Below are a list of properties that override default FullCalendar properties:
+
+- `viewName` _(replaces `defaultView`)_ - allows you to change the view mode from outside of the component. For example, when using `header=false`, you can use your own buttons to modify the `viewName` property to change the view of the calendar.
+
+- `viewRange` - can be used in conjunction with `viewName` to simultaneously navigate to a new date when switching to a new view. [See the docs](https://fullcalendar.io/docs/views/changeView/).
+
+- `onViewChange` - pass an action to be notified when the view changes. This is different than the `viewRender` callback provided by FullCalendar as it is only triggered when the view changes and is not when any of the date navigation methods are called.
+
+- `date` _(replaces `defaultDate`)_ - allows you to change the date from outside of the component.
+
 ### FullCalendar Callbacks
 All FullCalendar and FullCalendar Scheduler callbacks are supported and can be handled using Ember Actions. Here's a simple example:
 
@@ -102,7 +114,23 @@ export default Ember.Controller.extend({
 });
 ```
 
-## FullCalendar Scheduler License
+## FullCalendar Scheduler
+
+### Opting In
+By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `ember-cli-build.js`:
+```javascript
+  var app = new EmberApp(defaults, {
+    emberFullCalendar: {
+      includeScheduler: true
+    }
+    // Other options here, as needed.
+  });
+```
+
+## Fastboot Support
+This addon now has minimal Fastboot support via #46.
+
+### License
 By default, the addon uses the [Free Trial License Key](http://fullcalendar.io/scheduler/download/) provided by FullCalendar. If you have a paid license key, you may set it by explicitly passing it into the component as `schedulerLicenseKey` or, the better option, is to set it in your `config/environment.js` file like so:
 
 ```javascript

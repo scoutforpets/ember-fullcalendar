@@ -1,8 +1,8 @@
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
-const { get, isArray, getProperties } = Ember;
-import getOwner from 'ember-getowner-polyfill';
+
+const { assign, observer, computed, getOwner } = Ember;
 
 export default Ember.Component.extend(InvokeActionMixin, {
 
@@ -18,11 +18,11 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
 
   // scheduler defaults to non-commercial license
-  schedulerLicenseKey: Ember.computed(function() {
+  schedulerLicenseKey: computed(function() {
 
     // load the consuming app's config
-    const applicationConfig = getOwner(this)._lookupFactory('config:environment'),
-          defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
+    const applicationConfig = getOwner(this).resolveRegistration('config:environment');
+    const defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
 
     if (applicationConfig &&
         applicationConfig.emberFullCalendar &&
@@ -35,53 +35,63 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   fullCalendarOptions: [
     // general display
-    'header', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
+    'header', 'footer', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
     'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
-    'handleWindowResize', 'eventLimit',
+    'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
+
+    // clicking & hovering
+    'navLinks',
 
     // timezone
     'timezone', 'now',
 
     // views
-    'views', 'defaultView',
+    'views',
 
     // agenda options
     'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
     'minTime', 'maxTime', 'slotEventOverlap',
 
+    // list options
+    'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
+
     // current date
-    'defaultDate',
+    'nowIndicator', 'visibleRange', 'validRange', 'dateIncrement', 'dateAlignment', 'duration', 'dayCount',
 
     // text/time customization
-    'lang', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
+    'locale', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
     'dayNamesShort', 'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
 
     // selection
-    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint',
+    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
+    'selectMinDistance', 'selectLongPressDelay',
 
     // event data
-    'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
+    'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
     'defaultTimedEventDuration', 'defaultAllDayEventDuration', 'forceEventDuration',
 
     // event rendering
     'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'nextDayThreshold', 'eventOrder',
+    'eventRenderWait',
 
     // event dragging & resizing
     'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay',
 
     // dropping external elements
     'droppable', 'dropAccept',
 
     // timeline view
-    'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth', 'slotDuration', 'slotLabelFormat',
-    'slotLabelInterval', 'snapDuration', 'minTime', 'maxTime', 'scrollTime',
+    'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth',
 
     // resource data
-    'resources', 'eventResourceField',
+    'resources', 'eventResourceField', 'refetchResourcesOnNavigate',
 
     // resource rendering
-    'resourceOrder', 'resourceGroupField', 'resourceGroupText'
+    'resourceOrder', 'resourceGroupField', 'resourceGroupText', 'filterResourcesWithEvents',
+
+    // vertical resource view
+    'groupByResource', 'groupByDateAndResource'
   ],
 
   fullCalendarEvents: [
@@ -89,7 +99,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'viewRender', 'viewDestroy', 'dayRender', 'windowResize',
 
     // clicking and hovering
-    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout',
+    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout', 'navLinkDayClick', 'navLinkWeekClick',
 
     // selection
     'select', 'unselect',
@@ -99,18 +109,13 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // event rendering
     'eventRender', 'eventAfterRender', 'eventAfterAllRender', 'eventDestroy',
+    'eventLimitClick',
 
     // event dragging & resizing
     'eventDragStart', 'eventDragStop', 'eventDrop', 'eventResizeStart', 'eventResizeStop', 'eventResize',
 
     // dropping external events
     'drop', 'eventReceive',
-
-    // timeline view
-    'dayClick',
-
-    // resource data
-    'loading',
 
     // resource rendering
     'resourceText', 'resourceRender'
@@ -122,22 +127,22 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   didInsertElement() {
 
-    let options =
-      Object.assign(
+    const options =
+      assign(
         this.get('options'),
         this.get('hooks')
       );
+
+    // Temporary patch for `eventDataTransform` method throwing error
+    options.eventDataTransform = this.get('eventDataTransform');
 
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
     this.$().fullCalendar(options);
-
-    this._eventsDidChange();
   },
 
   willDestroyElement() {
-    this._eventsWillChange(this.get('events'));
     this.$().fullCalendar('destroy');
   },
 
@@ -149,16 +154,26 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns all of the valid Fullcalendar options that
    * were passed into the component.
    */
-  options: Ember.computed(function() {
+  options: computed(function() {
 
-    let fullCalendarOptions = this.get('fullCalendarOptions');
-    let options = {};
+    const fullCalendarOptions = this.get('fullCalendarOptions');
+    const options = {};
 
+    // Apply FullCalendar options based on property name
     fullCalendarOptions.forEach(optionName => {
       if (this.get(optionName) !== undefined) {
         options[optionName] = this.get(optionName);
       }
     });
+
+    // Handle overriden properties
+    if (this.get('viewName') !== undefined) {
+      options['defaultView'] = this.get('viewName');
+    }
+
+    if (this.get('date') !== undefined) {
+      options['defaultDate'] = this.get('date');
+    }
 
     return options;
   }),
@@ -167,9 +182,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns all of the valid Fullcalendar callback event
    * names that were passed into the component.
    */
-  usedEvents: Ember.computed('fullCalendarEvents', function() {
+  usedEvents: computed('fullCalendarEvents', function() {
     return this.get('fullCalendarEvents').filter(eventName => {
-      let methodName = '_' + eventName;
+      const methodName = `_${eventName}`;
       return this.get(methodName) !== undefined || this.get(eventName) !== undefined;
     });
   }),
@@ -178,107 +193,79 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Returns an object that contains a function for each action passed
    * into the component. This object is passed into Fullcalendar.
    */
-  hooks: Ember.computed(function() {
-    let actions = {};
+  hooks: computed(function() {
+    const actions = {};
 
     this.get('usedEvents').forEach((eventName) => {
 
       // create an event handler that runs the function inside an event loop.
       actions[eventName] = (...args) => {
-        Ember.run.schedule('actions', this, () => {
-          this.invokeAction(eventName, ...args, this.$());
-        });
+        this.invokeAction(eventName, ...args, this.$());
       };
     });
 
     return actions;
   }),
 
-  /**
-  * Ember observer triggered before the events property is changed
-  * We need to unbind any array observers
-  */
-  _eventsWillChange(events) {
-    if (isArray(events)) {
-      events.removeArrayObserver(this, {
-        willChange: '_eventsArrayWillChange',
-        didChange: '_eventsArrayDidChange'
-      });
-    }
-   //Trigger remove logic
-    var len = events ? get(events, 'length') : 0;
-    this._eventsArrayWillChange(events, 0, len);
-  },
+
+  /////////////////////////////////////
+  // OBSERVERS
+  /////////////////////////////////////
 
   /**
-  * Ember observer triggered when the events property is changed
-  * We need to bind an array observer to become notified of its changes
-  */
-  _eventsDidChange: Ember.observer('events', function() {
-    let events = this.get('events');
+   * Observe the events array for any changes and
+   * re-render if changes are detected
+   */
+  observeEvents: observer('events.[]', function () {
+     const fc = this.$();
+     fc.fullCalendar('removeEvents');
+     fc.fullCalendar('addEventSource', this.get('events'));
+  }),
 
-    //simulate a "beforeObserver"
-    if (this._oldEvents !== events ) {
-      this._eventsWillChange(this._oldEvents);
-      this._oldEvents = events;
-    }
+  /**
+   * Observe the eventSources array for any changes and
+   * re-render if changes are detected
+   */
+  observeEventSources: observer('eventSources.[]', function () {
+     const fc = this.$();
+     fc.fullCalendar('removeEventSources');
+     this.get('eventSources').forEach(function(source){
+       fc.fullCalendar('addEventSource', source);
+     });
+  }),
 
-    if (isArray(events)) {
-      events.addArrayObserver(this, {
-        willChange: '_eventsArrayWillChange',
-        didChange: '_eventsArrayDidChange'
-      });
+  /**
+   * Observes the resources array and refreshes the resource view
+   * if any changes are detected
+   * @type {[type]}
+   */
+  observeResources: observer('resources.[]', function() {
+    const fc = this.$();
+    fc.fullCalendar('refetchResources');
+  }),
 
-      var len = events ? get(events, 'length') : 0;
-      this._eventsArrayDidChange(events, 0, null, len);
+  /**
+   * Observes the 'viewName' property allowing FullCalendar view to be
+   * changed from outside of the component.
+   */
+  viewNameDidChange: Ember.observer('viewName', function() {
+    const viewName = this.get('viewName');
+    const viewRange = this.get('viewRange');
+    this.$().fullCalendar('changeView', viewName, viewRange);
+
+    // Call action if it exists
+    if (this.get('onViewChange')) {
+      this.get('onViewChange')(viewName, viewRange);
     }
   }),
 
-  /*
-  * Triggered before the events array changes
-  * Here we process the removed elements
-  */
-  _eventsArrayWillChange(array, idx, removedCount) {
-    let removed = Ember.A();
-
-    for (var i = idx; i < idx + removedCount; i++) {
-      removed.pushObject(array.objectAt(i));
-    }
-
-    this.$().fullCalendar('removeEvents', eventObject => removed.contains(eventObject.originalObject));
-  },
-
-  /*
-  * Triggered after the events array changes
-  * Here we process the inserted elements
-  */
-  _eventsArrayDidChange(array, idx, removedCount, addedCount) {
-    let added = Ember.A();
-
-    for (var i = idx; i < idx + addedCount; i++) {
-      added.pushObject(this.createEventObject(array.objectAt(i)));
-    }
-
-    this.$().fullCalendar('addEventSource', added);
-    this.$().fullCalendar('rerenderEvents');
-  },
-
-  eventObjectProperties: [
-    'id', 'title', 'allDay', 'start', 'end', 'url', 'className', 'editable',
-    'startEditable', 'durationEditable', 'rendering', 'overlap', 'constraint',
-    'source', 'color', 'backgroundColor', 'borderColor', 'textColor'
-  ],
-
   /**
-   * Create a wrapper event object to contain
-   * the original object. Fullcalendar creates new objects
-   * internally, so we can't compare by object reference later.
-   * The good thing is that this is overridable.
+   * Observes `date` property allowing date to be changed from outside
+   * of the component.
    */
-  createEventObject(data) {
-    let eventObject = getProperties(data, ...this.get('eventObjectProperties'));
-    eventObject.originalObject = data;
-    return eventObject;
-  }
+  dateDidChange: Ember.observer('date', function() {
+    let date = this.get('date');
+    this.$().fullCalendar('gotoDate', date);
+  })
 
 });
