@@ -13,6 +13,10 @@ To install it run:
 
 ```ember install ember-fullcalendar```
 
+You will also need to install `ember-moment`:
+
+```ember install ember-moment```
+
 ## Overview
 This addon currently supports every option and callback currently available for FullCalendar 3.0 and FullCalendar Scheduler 1.4.0. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
