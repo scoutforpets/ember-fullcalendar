@@ -121,14 +121,17 @@ export default Ember.Controller.extend({
 ## FullCalendar Scheduler
 
 ### Opting In
-By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `ember-cli-build.js`:
+By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `environment.js`:
 ```javascript
-  var app = new EmberApp(defaults, {
+  var ENV = {
+    ...
+
     emberFullCalendar: {
-      includeScheduler: true
-    }
-    // Other options here, as needed.
-  });
+        includeScheduler: true
+    },
+
+    ...
+  };
 ```
 
 ## Fastboot Support
