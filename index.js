@@ -1,5 +1,6 @@
 /* jshint node: true */
 'use strict';
+const fastbootTransform = require('fastboot-transform');
 
 module.exports = {
   name: 'ember-fullcalendar',
@@ -10,18 +11,17 @@ module.exports = {
 
   options: {
     nodeAssets: {
-      'fullcalendar': function() {
-        return {
-          enabled: !process.env.EMBER_CLI_FASTBOOT,
-          srcDir: 'dist',
-          import: ['fullcalendar.js', 'fullcalendar.css']
+      'fullcalendar': {
+        include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'],
+        processTree(input) {
+          return fastbootTransform(input);
         }
       },
-      'fullcalendar-scheduler': function() {
-        return {
-          enabled: !process.env.EMBER_CLI_FASTBOOT && this.includeScheduler,
-          srcDir: 'dist',
-          import: ['scheduler.js', 'scheduler.css']
+      'fullcalendar-scheduler': {
+        enabled: this.includeScheduler,
+        include: ['dist/scheduler.js', 'dist/scheduler.css'],
+        processTree(input) {
+          return fastbootTransform(input);
         }
       }
     }
