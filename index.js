@@ -1,4 +1,4 @@
-/* jshint node: true */
+/* eslint-env node */
 'use strict';
 const fastbootTransform = require('fastboot-transform');
 
@@ -12,22 +12,26 @@ module.exports = {
   options: {
     nodeAssets: {
       'fullcalendar': {
-        include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'],
-        processTree(input) {
-          return fastbootTransform(input);
+        import: {
+          include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'],
+          processTree(input) {
+            return fastbootTransform(input);
+          }
         }
       },
       'fullcalendar-scheduler': {
         enabled: this.includeScheduler,
-        include: ['dist/scheduler.js', 'dist/scheduler.css'],
-        processTree(input) {
-          return fastbootTransform(input);
+        import: {
+          include: ['dist/scheduler.js', 'dist/scheduler.css'],
+          processTree(input) {
+            return fastbootTransform(input);
+          }
         }
       }
     }
   },
 
-  included: function(app, parentAddon) {
+  included(app, parentAddon) {
 
     var target = parentAddon || app;
 
