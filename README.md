@@ -13,6 +13,10 @@ To install it run:
 
 ```ember install ember-fullcalendar```
 
+You will also need to install `ember-moment`:
+
+```ember install ember-moment```
+
 ## Overview
 This addon currently supports every option and callback currently available for FullCalendar 3.0 and FullCalendar Scheduler 1.4.0. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
@@ -117,14 +121,17 @@ export default Ember.Controller.extend({
 ## FullCalendar Scheduler
 
 ### Opting In
-By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `ember-cli-build.js`:
+By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `environment.js`:
 ```javascript
-  var app = new EmberApp(defaults, {
+  var ENV = {
+    ...
+
     emberFullCalendar: {
-      includeScheduler: true
-    }
-    // Other options here, as needed.
-  });
+        includeScheduler: true
+    },
+
+    ...
+  };
 ```
 
 ## Fastboot Support
