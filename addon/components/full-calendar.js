@@ -2,6 +2,7 @@ import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
 
+
 const { assign, observer, computed, getOwner } = Ember;
 
 export default Ember.Component.extend(InvokeActionMixin, {
@@ -140,6 +141,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
     this.$().fullCalendar(options);
+
+    this.addEventObserver();
   },
 
   willDestroyElement() {
@@ -215,15 +218,48 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
 
   /**
-   * Observe the events array for any changes and
-   * re-render if changes are detected
+   * Add observer on the event list based on the configuration in config.fullCalendar.eventsObserver.
+   * The configuration should be an array of properties that normally would be passed into the observer method
+   * @example
+   * ```
+   * fullCalendar: {
+   *   eventsObserver: [
+   *     'events.[]', 'events.@each.{start,end}'
+   *   ]
+   * }
+   * ```
+   * @default ['events.[]']
+   * 
+   * ObserverMethod:
+   *   Observe the events array for any changes and
+   *   re-render if changes are detected. Debounce events as we are watching all the event properties which can generate a lot of re-renders.
    */
-  observeEvents: observer('events.[]', function () {
+  addEventObserver: function(){
+    let ENV = Ember.getOwner(this).resolveRegistration('config:environment');
+    let watchProperties = Ember.getWithDefault(ENV, 'fullCalendar.eventsObserver', ['events.[]']);
+    
+    const eventChangeHandler = function () {
+      Ember.run.debounce(this, this.rerenderEvents, 50);
+    };
+
+    const addEventPropertyObserver = (prop) => {
+      this.addObserver(prop, null, eventChangeHandler);
+    };
+    
+    for(let prop of watchProperties){
+      Ember.expandProperties(prop, addEventPropertyObserver);
+    }
+  },
+
+  /**
+   * removes and adds the events to the calendar
+   */
+  rerenderEvents: function () {
      const fc = this.$();
      fc.fullCalendar('removeEvents');
      fc.fullCalendar('addEventSource', this.get('events'));
-  }),
-
+  },
+  
   /**
    * Observe the eventSources array for any changes and
    * re-render if changes are detected
