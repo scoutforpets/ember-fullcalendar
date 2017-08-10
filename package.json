@@ -56,7 +56,8 @@
     "ember-cli-node-assets": "0.2.2",
     "ember-invoke-action": "^1.4.0",
     "fullcalendar": "^3.3.0",
-    "fullcalendar-scheduler": "^1.6.0"
+    "fullcalendar-scheduler": "^1.6.0",
+    "fastboot-transform": "^0.1.2"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
