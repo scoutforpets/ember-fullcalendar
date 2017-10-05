@@ -1,5 +1,6 @@
-/* jshint node: true */
+/* eslint-env node */
 'use strict';
+const fastbootTransform = require('fastboot-transform');
 
 module.exports = {
   name: 'ember-fullcalendar',
@@ -10,24 +11,27 @@ module.exports = {
 
   options: {
     nodeAssets: {
-      'fullcalendar': function() {
-        return {
-          enabled: !process.env.EMBER_CLI_FASTBOOT,
-          srcDir: 'dist',
-          import: ['fullcalendar.js', 'fullcalendar.css'].concat(this.includeLocalesFiles)
+      'fullcalendar': {
+        import: {
+          include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'].concat(this.includeLocalesFiles),
+          processTree(input) {
+            return fastbootTransform(input);
+          }
         }
       },
-      'fullcalendar-scheduler': function() {
-        return {
-          enabled: !process.env.EMBER_CLI_FASTBOOT && this.includeScheduler,
-          srcDir: 'dist',
-          import: ['scheduler.js', 'scheduler.css']
+      'fullcalendar-scheduler': {
+        enabled: this.includeScheduler,
+        import: {
+          include: ['dist/scheduler.js', 'dist/scheduler.css'],
+          processTree(input) {
+            return fastbootTransform(input);
+          }
         }
       }
     }
   },
 
-  included: function(app, parentAddon) {
+  included(app, parentAddon) {
 
     var target = parentAddon || app;
 
@@ -39,13 +43,13 @@ module.exports = {
     var config = target.project.config(target.env) || {};
 
     // include locale files
-    if(config.emberFullCalendar && config.emberFullCalendar.includeLocales) {
-      if(Array.isArray(config.emberFullCalendar.includeLocales)) {
+    if (config.emberFullCalendar && config.emberFullCalendar.includeLocales) {
+      if (Array.isArray(config.emberFullCalendar.includeLocales)) {
         this.includeLocalesFiles = config.emberFullCalendar.includeLocales.map(function(localeCode) {
-          return 'locale/' + localeCode + '.js';
+          return 'dist/locale/' + localeCode + '.js';
         });
-      } else if(config.emberFullCalendar.includeLocales === "all") {
-        this.includeLocalesFiles = ['locale-all.js'];
+      } else if (config.emberFullCalendar.includeLocales === "all") {
+        this.includeLocalesFiles = ['dist/locale-all.js'];
       } else {
         this.includeLocalesFiles = [];
       }
