@@ -11,14 +11,12 @@ module.exports = {
 
   options: {
     nodeAssets: {
-      'fullcalendar': {
-        function() {
-          return {
-            import: {
-              include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'].concat(this.includeLocalesFiles),
-              processTree(input) {
-                return fastbootTransform(input);
-              }
+      'fullcalendar': function() {
+        return {
+          import: {
+            include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'].concat(this.includeLocalesFiles),
+            processTree(input) {
+              return fastbootTransform(input);
             }
           }
         }
