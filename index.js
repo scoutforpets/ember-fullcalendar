@@ -12,10 +12,14 @@ module.exports = {
   options: {
     nodeAssets: {
       'fullcalendar': {
-        import: {
-          include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'].concat(this.includeLocalesFiles),
-          processTree(input) {
-            return fastbootTransform(input);
+        function() {
+          return {
+            import: {
+              include: ['dist/fullcalendar.js', 'dist/fullcalendar.css'].concat(this.includeLocalesFiles),
+              processTree(input) {
+                return fastbootTransform(input);
+              }
+            }
           }
         }
       },
@@ -32,7 +36,6 @@ module.exports = {
   },
 
   included(app, parentAddon) {
-
     var target = parentAddon || app;
 
     // allow addon to be nested - see: https://github.com/ember-cli/ember-cli/issues/3718
