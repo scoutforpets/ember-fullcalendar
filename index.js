@@ -19,16 +19,18 @@ module.exports = {
               return fastbootTransform(input);
             }
           }
-        }
+        };
       },
-      'fullcalendar-scheduler': {
-        enabled: this.includeScheduler,
-        import: {
-          include: ['dist/scheduler.js', 'dist/scheduler.css'],
-          processTree(input) {
-            return fastbootTransform(input);
+      'fullcalendar-scheduler': function() {
+        return {
+          enabled: this.includeScheduler,
+          import: {
+            include: ['dist/scheduler.js', 'dist/scheduler.css'],
+            processTree(input) {
+              return fastbootTransform(input);
+            }
           }
-        }
+        };
       }
     }
   },
