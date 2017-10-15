@@ -14,9 +14,7 @@ To install it run:
 ```ember install ember-fullcalendar```
 
 ## Overview
-This addon currently supports every option and callback currently available for FullCalendar 3.0 and FullCalendar Scheduler 1.4.0. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
-
-*NOTE:* By default, this addon installs and imports both FullCalendar and the FullCalendar Scheduler addon. You may opt out of importing the FullCalendar Scheduler addon if it's not needed.
+This addon currently supports every option and callback currently available for FullCalendar 3.6 and FullCalendar Scheduler 1.8. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
 ## Usage
 
