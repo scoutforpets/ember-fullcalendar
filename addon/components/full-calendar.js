@@ -219,9 +219,13 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * re-render if changes are detected
    */
   observeEvents: observer('events.[]', function () {
-     const fc = this.$();
-     fc.fullCalendar('removeEvents');
-     fc.fullCalendar('addEventSource', this.get('events'));
+    const fc = this.$();
+    const events = this.get('events');
+
+    if (events) {
+      fc.fullCalendar('removeEvents');
+      fc.fullCalendar('addEventSource', this.get('events'));
+    }
   }),
 
   /**
@@ -230,9 +234,13 @@ export default Ember.Component.extend(InvokeActionMixin, {
    */
   observeEventSources: observer('eventSources.[]', function () {
      const fc = this.$();
+
      fc.fullCalendar('removeEventSources');
+
      this.get('eventSources').forEach(function(source){
-       fc.fullCalendar('addEventSource', source);
+       if (source) {
+         fc.fullCalendar('addEventSource', source);
+       }
      });
   }),
 
@@ -253,6 +261,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
   viewNameDidChange: Ember.observer('viewName', function() {
     const viewName = this.get('viewName');
     const viewRange = this.get('viewRange');
+
     this.$().fullCalendar('changeView', viewName, viewRange);
 
     // Call action if it exists
