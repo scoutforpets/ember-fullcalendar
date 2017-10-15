@@ -117,14 +117,42 @@ export default Ember.Controller.extend({
 ## FullCalendar Scheduler
 
 ### Opting In
-By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `ember-cli-build.js`:
+By default, FullCalendar Scheduler is NOT imported. To include it, add the following to your application's `config/environment.js`:
 ```javascript
-  var app = new EmberApp(defaults, {
-    emberFullCalendar: {
-      includeScheduler: true
-    }
-    // Other options here, as needed.
-  });
+var ENV = {
+  emberFullCalendar: {
+    includeScheduler: true
+  }
+  // Other options here, as needed.
+});
+```
+
+## FullCalendar Locales
+
+By default, only English locale is available. If you need to use other locales, you have to include them in `config/environment.js` like this:
+```javascript
+var ENV = {
+  emberFullCalendar: {
+      includeLocales: ['fr', 'it']
+  }
+  // Other options here, as needed.
+});
+```
+
+Or, if you need ALL the locales, you can do the following:
+```javascript
+var ENV = {
+  emberFullCalendar: {
+      includeLocales: 'all'
+  }
+  // Other options here, as needed.
+});
+```
+
+Then, you can set the fullcalendar language by using the `locale` option:
+
+```handlebars
+{{full-calendar events=events locale='fr'}}
 ```
 
 ## Fastboot Support
