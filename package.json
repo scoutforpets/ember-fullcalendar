@@ -35,6 +35,7 @@
   "dependencies": {
     "ember-cli-babel": "^6.7.2",
     "ember-cli-htmlbars": "^2.0.1",
+    "ember-cli-moment-shim": "3.0.1",
     "ember-cli-node-assets": "0.2.2",
     "ember-invoke-action": "^1.4.0",
     "fullcalendar": "^3.6.0",
@@ -51,7 +52,6 @@
     "ember-cli-fastboot": "^1.0.0-beta.15",
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-cli-inject-live-reload": "^1.4.1",
-    "ember-cli-moment-shim": "3.0.1",
     "ember-cli-qunit": "^4.0.0",
     "ember-cli-release": "1.0.0-beta.2",
     "ember-cli-shims": "^1.1.0",
