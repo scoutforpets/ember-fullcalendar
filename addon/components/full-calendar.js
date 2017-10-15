@@ -35,9 +35,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   fullCalendarOptions: [
     // general display
-    'header', 'footer', 'customButtons', 'buttonIcons', 'theme', 'themeButtonIcons', 'firstDay', 'isRTL', 'weekends', 'hiddenDays',
-    'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours', 'height', 'contentHeight', 'aspectRatio',
-    'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
+    'header', 'footer', 'customButtons', 'buttonIcons', 'themeSystem', 'theme', 'themeButtonIcons', 'bootstrapGlyphicons',
+    'firstDay', 'isRTL', 'weekends', 'hiddenDays', 'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours',
+    'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
 
     // clicking & hovering
     'navLinks',
@@ -50,7 +50,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // agenda options
     'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
-    'minTime', 'maxTime', 'slotEventOverlap',
+    'minTime', 'maxTime', 'slotEventOverlap', 'agendaEventMinHeight',
 
     // list options
     'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
@@ -88,7 +88,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'resources', 'eventResourceField', 'refetchResourcesOnNavigate',
 
     // resource rendering
-    'resourceOrder', 'resourceGroupField', 'resourceGroupText', 'filterResourcesWithEvents',
+    'resourceOrder', 'resourceGroupField', 'resourceGroupText', 'resourcesInitiallyExpanded', 'filterResourcesWithEvents',
 
     // vertical resource view
     'groupByResource', 'groupByDateAndResource'
