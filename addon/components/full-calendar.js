@@ -222,8 +222,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
     const fc = this.$();
     const events = this.get('events');
 
+    fc.fullCalendar('removeEvents');
+
     if (events) {
-      fc.fullCalendar('removeEvents');
       fc.fullCalendar('addEventSource', this.get('events'));
     }
   }),
