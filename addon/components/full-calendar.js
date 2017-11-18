@@ -139,6 +139,13 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
+    // assign resources as a function if resources is an Array so refetchResources works
+    if (options.resources && options.resources instanceof Array) {
+      options.resources = (callback) => {
+        callback(this.get('resources'));
+      }
+    }
+
     this.$().fullCalendar(options);
   },
 
