@@ -36,7 +36,6 @@ module.exports = {
   },
 
   included(app, parentAddon) {
-    app.import('vendor/gcal.min.js');
 
     var target = parentAddon || app;
 
