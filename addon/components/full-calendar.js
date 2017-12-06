@@ -39,6 +39,9 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'firstDay', 'isRTL', 'weekends', 'hiddenDays', 'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours',
     'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
 
+    // google calendar
+    'googleCalendarApiKey',
+
     // clicking & hovering
     'navLinks',
 
