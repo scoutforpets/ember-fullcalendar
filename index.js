@@ -36,6 +36,8 @@ module.exports = {
   },
 
   included(app, parentAddon) {
+    app.import('vendor/gcal.min.js');
+
     var target = parentAddon || app;
 
     // allow addon to be nested - see: https://github.com/ember-cli/ember-cli/issues/3718
