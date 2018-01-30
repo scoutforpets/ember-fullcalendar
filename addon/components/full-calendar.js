@@ -50,7 +50,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // agenda options
     'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
-    'minTime', 'maxTime', 'slotEventOverlap', 'agendaEventMinHeight', 'slots', 'snapOnSlots',
+    'minTime', 'maxTime', 'slotEventOverlap', 'agendaEventMinHeight', 'slots', 'snapOnSlots', 'showSlotEndTime', 'showMinorSlotTime',
+
 
     // list options
     'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
