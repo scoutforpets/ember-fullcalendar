@@ -216,6 +216,14 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
 
   /**
+   * Observe the custom slots array for any changes and
+   * update if changes are detected.
+   */
+  observeSlots: observer('slots.[]', function() {
+    this.$().fullCalendar('option', 'slots', this.get('slots'));
+  }),
+
+  /**
    * Observe the events array for any changes and
    * re-render if changes are detected
    */
