@@ -12,6 +12,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   layout: layout,
   classNames: ['full-calendar'],
+  closureactions: false,
 
   /////////////////////////////////////
   // FULLCALENDAR OPTIONS
@@ -198,11 +199,17 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     this.get('usedEvents').forEach((eventName) => {
 
-      // create an event handler that runs the function inside an event loop.
+
       actions[eventName] = (...args) => {
-        Ember.run.schedule('actions', this, () => {
-          this.invokeAction(eventName, ...args, this.$());
-        });
+        if(this.get('closureactions')) {
+          // create an event handler that runs as a closure action
+          return this.get(eventName)(...args, this.$())
+        } else {
+          // create an event handler that runs the function inside an event loop.
+          Ember.run.schedule('actions', this, () => {
+            this.invokeAction(eventName, ...args, this.$());
+          });
+        }
       };
     });
 

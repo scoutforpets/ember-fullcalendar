@@ -112,6 +112,29 @@ export default Ember.Controller.extend({
 });
 ```
 
+#### Closure Actions
+If you prefer closure actions or need to return a value from the callback enable closure actions.
+
+```handlebars
+// app/templates/application.hbs
+{{full-calendar events=events eventRender=(action 'eventRender') closureactions=true}}
+```
+
+```javascript
+// app/controllers/application.js
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
+	actions: {
+    eventRender(event){
+      // render based on some logic
+      var render = Math.random() >= .5;
+      return render;
+    }
+	}
+});
+```
+
 ## FullCalendar Scheduler
 
 ### Opting In
