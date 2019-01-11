@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
+import { Calendar } from '@fullcalendar/core';
 
 const { assign, observer, computed, getOwner } = Ember;
 
@@ -12,6 +13,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
   layout: layout,
   classNames: ['full-calendar'],
+  calendar: undefined,
 
   /////////////////////////////////////
   // FULLCALENDAR OPTIONS
@@ -34,91 +36,119 @@ export default Ember.Component.extend(InvokeActionMixin, {
   }),
 
   fullCalendarOptions: [
-    // general display
-    'header', 'footer', 'customButtons', 'buttonIcons', 'themeSystem', 'theme', 'themeButtonIcons', 'bootstrapGlyphicons',
-    'firstDay', 'isRTL', 'weekends', 'hiddenDays', 'fixedWeekCount', 'weekNumbers', 'weekNumberCalculation', 'businessHours',
-    'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'eventLimit', 'weekNumbersWithinDays', 'showNonCurrentDates',
+    'rerenderDelay', 'defaultRangeSeparator',
 
-    // clicking & hovering
-    'navLinks',
+    // toolbar
+    'header', 'footer', 'titleFormat', 'titleRangeSeparator', 'buttonText', 'buttonIcons', 'customButtons',
 
-    // timezone
-    'timezone', 'now',
+    // theme
+    'themeSystem', 'bootstrapGlyphicons', 'bootstrapFontawesome',
+
+    // sizing
+    'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'windowResizeDelay',
 
     // views
-    'views',
+    'views', 'fixedWeekCount', 'showNonCurrentDates', 'allDaySlot', 'allDayText', 'slotEventOverlap',
+    'timeGridEventMinHeight',
 
-    // agenda options
-    'allDaySlot', 'allDayText', 'slotDuration', 'slotLabelFormat', 'slotLabelInterval', 'snapDuration', 'scrollTime',
-    'minTime', 'maxTime', 'slotEventOverlap', 'agendaEventMinHeight',
-
-    // list options
+    // list
     'listDayFormat', 'listDayAltFormat', 'noEventsMessage',
 
-    // current date
-    'nowIndicator', 'visibleRange', 'validRange', 'dateIncrement', 'dateAlignment', 'duration', 'dayCount',
+    // timeline
+    'resourceGroupField', 'resourceGroupText', 'resourceAreaWidth', 'resourceLabelText', 'resourceColumns',
+    'resourcesInitiallyExpanded', 'slotWidth', 'datesAboveResources',
 
-    // text/time customization
-    'locale', 'timeFormat', 'columnFormat', 'titleFormat', 'buttonText', 'monthNames', 'monthNamesShort', 'dayNames',
-    'dayNamesShort', 'weekNumberTitle', 'displayEventTime', 'displayEventEnd', 'eventLimitText', 'dayPopoverFormat',
+    // custom views
+    'duration', 'dayCount', 'visibleRange',
+
+    // date & time
+    'weekends', 'hiddenDays', 'columnHeader', 'columnHeaderFormat', 'columnHeaderText', 'columnHeaderHtml',
+    'slotDuration', 'slotLabelInterval', 'slotLabelFormat', 'minTime', 'maxTime', 'scrollTime',
+
+    // date navigation
+    'dateIncrement', 'dateAlignment', 'validRange',
+
+    // date nav links
+    'navLinks', 'navLinkDayClick', 'navLinkWeekClick',
+
+    // week numbers
+    'weekNumbers', 'weekNumbersWithinDays', 'weekNumberCalculation', 'weekLabel',
 
     // selection
-    'selectable', 'selectHelper', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
-    'selectMinDistance', 'selectLongPressDelay',
+    'selectable', 'selectMirror', 'unselectAuto', 'unselectCancel', 'selectOverlap', 'selectConstraint', 'selectAllow',
+    'selectMinDistance',
 
-    // event data
-    'events', 'eventSources', 'allDayDefault', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
-    'defaultTimedEventDuration', 'defaultAllDayEventDuration', 'forceEventDuration',
+    // now indicator
+    'nowIndicator', 'now',
 
-    // event rendering
-    'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'nextDayThreshold', 'eventOrder',
-    'eventRenderWait',
+    // business hours
+    'businessHours',
+
+    // event model
+    'eventDataTransform', 'allDayDefault', 'defaultTimedEventDuration', 'defaultAllDayEventDuration', 'forceEventDuration',
+
+    // event sources
+    'events', 'eventSources', 'startParam', 'endParam', 'timezoneParam', 'lazyFetching',
+
+    // event display
+    'eventColor', 'eventBackgroundColor', 'eventBorderColor', 'eventTextColor', 'eventTimeFormat',
+    'displayEventTime', 'displayEventEnd', 'nextDayThreshold', 'eventOrder', 'progressiveEventRendering',
 
     // event dragging & resizing
-    'editable', 'eventStartEditable', 'eventDurationEditable', 'dragRevertDuration', 'dragOpacity', 'dragScroll',
-    'eventOverlap', 'eventConstraint', 'eventAllow', 'longPressDelay', 'eventLongPressDelay',
+    'editable', 'eventStartEditable', 'eventResizableFromStart', 'eventDurationEditable', 'eventResourceEditable',
+    'droppable', 'eventDragMinDistance', 'dragRevertDuration', 'dragScroll', 'snapDuration', 'allDayMaintainDuration',
+    'eventOverlap', 'eventConstraint', 'eventAllow', 'dropAccept',
 
-    // dropping external elements
-    'droppable', 'dropAccept',
-
-    // timeline view
-    'resourceAreaWidth', 'resourceLabelText', 'resourceColumns', 'slotWidth',
+    // event popover
+    'eventLimit', 'eventLimitClick', 'eventLimitText', 'dayPopoverFormat',
 
     // resource data
-    'resources', 'eventResourceField', 'refetchResourcesOnNavigate',
+    'resources', 'refetchResourcesOnNavigate',
 
-    // resource rendering
-    'resourceOrder', 'resourceGroupField', 'resourceGroupText', 'resourcesInitiallyExpanded', 'filterResourcesWithEvents',
+    // resources
+    'resourceOrder', 'filterResourcesWithEvents', 'resourceText',
 
-    // vertical resource view
-    'groupByResource', 'groupByDateAndResource'
+    // international
+    'locale', 'locales', 'firstDay', 'dir',
+
+    // timezone
+    'timeZone',
+
+    // accessibility
+    'longPressDelay', 'eventLongPressDelay', 'selectLongPressDelay',
+
+    // plugins
+    'plugins',
   ],
 
   fullCalendarEvents: [
-    // general display
-    'viewRender', 'viewDestroy', 'dayRender', 'windowResize',
+    // sizing
+    'windowResize',
+
+    // view api
+    'viewSkeletonRender', 'viewSkeletonDestroy', 'datesRender', 'datesDestroy',
+
+    // date & time
+    'dayRender',
+
+    // date clicking & selecting
+    'dateClick', 'select', 'unselect',
+
+    // event sources
+    'eventSourceSuccess', 'eventSourceFailure', 'loading',
+
+    // event display
+    'eventRender', 'eventPositioned', 'eventDestroy',
 
     // clicking and hovering
-    'dayClick', 'eventClick', 'eventMouseover', 'eventMouseout', 'navLinkDayClick', 'navLinkWeekClick',
-
-    // selection
-    'select', 'unselect',
-
-    // event data
-    'eventDataTransform', 'loading',
-
-    // event rendering
-    'eventRender', 'eventAfterRender', 'eventAfterAllRender', 'eventDestroy',
-    'eventLimitClick',
+    'eventClick', 'eventMouseEnter', 'eventMouseLeave',
 
     // event dragging & resizing
-    'eventDragStart', 'eventDragStop', 'eventDrop', 'eventResizeStart', 'eventResizeStop', 'eventResize',
-
-    // dropping external events
-    'drop', 'eventReceive',
+    'eventDragStart', 'eventDragStop', 'eventDrop', 'drop', 'eventReceive', 'eventLeave',
+    'eventResizeStart', 'eventResizeStop', 'eventResize',
 
     // resource rendering
-    'resourceText', 'resourceRender'
+    'resourceRender',
   ],
 
   /////////////////////////////////////
@@ -139,11 +169,13 @@ export default Ember.Component.extend(InvokeActionMixin, {
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
 
-    this.$().fullCalendar(options);
+    const calendar = new Calendar(this.element, options);
+    this.set('calendar', calendar);
+    calendar.render();
   },
 
   willDestroyElement() {
-    this.$().fullCalendar('destroy');
+    this.get('calendar').destroy();
   },
 
   /////////////////////////////////////
@@ -201,7 +233,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
       // create an event handler that runs the function inside an event loop.
       actions[eventName] = (...args) => {
         Ember.run.schedule('actions', this, () => {
-          this.invokeAction(eventName, ...args, this.$());
+          this.invokeAction(eventName, ...args, this.get('calendar'));
         });
       };
     });
@@ -219,14 +251,15 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * re-render if changes are detected
    */
   observeEvents: observer('events.[]', function () {
-    const fc = this.$();
     const events = this.get('events');
 
-    fc.fullCalendar('removeEvents');
+    this.get('calendar').batchRendering(() => {
+      this.get('calendar').getEvents().forEach(e => e.remove());
 
-    if (events) {
-      fc.fullCalendar('addEventSource', this.get('events'));
-    }
+      if (events) {
+        this.get('calendar').addEventSource(this.get('events'));
+      }
+    });
   }),
 
   /**
@@ -234,14 +267,14 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * re-render if changes are detected
    */
   observeEventSources: observer('eventSources.[]', function () {
-     const fc = this.$();
+     this.get('calendar').batchRendering(() => {
+       this.get('calendar').getEventSources().forEach(e => e.remove());
 
-     fc.fullCalendar('removeEventSources');
-
-     this.get('eventSources').forEach(function(source){
-       if (source) {
-         fc.fullCalendar('addEventSource', source);
-       }
+       this.get('eventSources').forEach(function(source){
+         if (source) {
+           this.get('calendar').addEventSource(source);
+         }
+       });
      });
   }),
 
@@ -251,8 +284,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * @type {[type]}
    */
   observeResources: observer('resources.[]', function() {
-    const fc = this.$();
-    fc.fullCalendar('refetchResources');
+    this.get('calendar').refetchResources();
   }),
 
   /**
@@ -263,7 +295,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     const viewName = this.get('viewName');
     const viewRange = this.get('viewRange');
 
-    this.$().fullCalendar('changeView', viewName, viewRange);
+    this.get('calendar').changeView(viewName, viewRange);
 
     // Call action if it exists
     if (this.get('onViewChange')) {
@@ -277,7 +309,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    */
   dateDidChange: Ember.observer('date', function() {
     let date = this.get('date');
-    this.$().fullCalendar('gotoDate', date);
+    this.get('calendar').gotoDate(date);
   })
 
 });

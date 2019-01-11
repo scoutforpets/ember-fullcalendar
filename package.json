@@ -36,17 +36,18 @@
     "test:all": "ember try:each"
   },
   "dependencies": {
+    "@fullcalendar/core": "~4.2.0",
+    "ember-auto-import": "^1.4.1",
     "ember-cli-babel": "^7.1.2",
     "ember-cli-htmlbars": "^3.0.0",
     "ember-cli-moment-shim": "3.5.0",
     "ember-cli-node-assets": "0.2.2",
     "ember-invoke-action": "^1.5.0",
-    "fastboot-transform": "^0.1.2",
-    "fullcalendar": "^3.6.0",
-    "fullcalendar-scheduler": "^1.8.0"
+    "fastboot-transform": "^0.1.2"
   },
   "devDependencies": {
     "@ember/optional-features": "^0.6.3",
+    "@fullcalendar/daygrid": "~4.2.0",
     "broccoli-asset-rev": "^2.7.0",
     "ember-cli": "~3.7.0",
     "ember-cli-app-version": "^3.1.3",
