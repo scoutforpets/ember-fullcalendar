@@ -2,11 +2,11 @@ import Ember from 'ember';
 import layout from '../templates/components/full-calendar';
 import { InvokeActionMixin } from 'ember-invoke-action';
 import { Calendar } from '@fullcalendar/core';
+import deepEqual from 'fast-deep-equal'
 
 const { assign, observer, computed, getOwner } = Ember;
 
 export default Ember.Component.extend(InvokeActionMixin, {
-
   /////////////////////////////////////
   // PROPERTIES
   /////////////////////////////////////
@@ -24,7 +24,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
 
     // load the consuming app's config
     const applicationConfig = getOwner(this).resolveRegistration('config:environment');
-    const defaultSchedulerLicenseKey = 'CC-Attribution-NonCommercial-NoDerivatives';
+    const defaultSchedulerLicenseKey = 'GPL-My-Project-Is-Open-Source';
 
     if (applicationConfig &&
         applicationConfig.emberFullCalendar &&
@@ -48,7 +48,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'height', 'contentHeight', 'aspectRatio', 'handleWindowResize', 'windowResizeDelay',
 
     // views
-    'views', 'fixedWeekCount', 'showNonCurrentDates', 'allDaySlot', 'allDayText', 'slotEventOverlap',
+    'views', 'defaultView', 'fixedWeekCount', 'showNonCurrentDates', 'allDaySlot', 'allDayText', 'slotEventOverlap',
     'timeGridEventMinHeight',
 
     // list
@@ -66,7 +66,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
     'slotDuration', 'slotLabelInterval', 'slotLabelFormat', 'minTime', 'maxTime', 'scrollTime',
 
     // date navigation
-    'dateIncrement', 'dateAlignment', 'validRange',
+    'defaultDate', 'dateIncrement', 'dateAlignment', 'validRange',
 
     // date nav links
     'navLinks', 'navLinkDayClick', 'navLinkWeekClick',
@@ -156,19 +156,26 @@ export default Ember.Component.extend(InvokeActionMixin, {
   /////////////////////////////////////
 
   didInsertElement() {
+    const calendarOptions = this.getOptions();
+    const calendarEvents = this.getEvents();
 
     const options =
       assign(
-        this.get('options'),
-        this.get('hooks')
+        {},
+        calendarOptions,
+        calendarEvents
       );
+
+    this.setProperties({
+      calendarOptions: calendarOptions,
+      calendarEvents: calendarEvents
+    });
 
     // Temporary patch for `eventDataTransform` method throwing error
     options.eventDataTransform = this.get('eventDataTransform');
 
     // add the license key for the scheduler
     options.schedulerLicenseKey = this.get('schedulerLicenseKey');
-
     const calendar = new Calendar(this.element, options);
     this.set('calendar', calendar);
     calendar.render();
@@ -178,16 +185,52 @@ export default Ember.Component.extend(InvokeActionMixin, {
     this.get('calendar').destroy();
   },
 
-  /////////////////////////////////////
-  // COMPUTED PROPERTIES
-  /////////////////////////////////////
+  didUpdateAttrs() {
+    this._super(...arguments);
+    let updates = {};
+    let removals = [];
+    let newOptions = this.getOptions();
 
-  /**
+    removals = this.removedAttrs(this.calendarOptions, newOptions, removals);
+    updates = this.updatedAttrs(this.calendarOptions, newOptions, updates);
+
+    if (!deepEqual(this.calendarOptions, newOptions)) {
+      this.setProperties({
+        calendarOptions: newOptions
+      });
+    }
+    this.calendar.mutateOptions(updates, removals, false, deepEqual);
+  },
+
+  /*
+   * Get removed attributes
+   */
+  removedAttrs(prevAttrs, attrs, removals) {
+    for (const attrName in prevAttrs) {
+      if (!(attrName in attrs)) {
+        removals.push(attrName)
+      }
+    }
+    return removals;
+  },
+
+  /*
+   * Get updated attributes
+   */
+  updatedAttrs(prevAttrs, attrs, updates) {
+    for (const attrName in attrs) {
+      if (!deepEqual(attrs[attrName], prevAttrs[attrName])) {
+        updates[attrName] = attrs[attrName]
+      }
+    }
+    return updates;
+  },
+
+  /*
    * Returns all of the valid Fullcalendar options that
    * were passed into the component.
    */
-  options: computed(function() {
-
+  getOptions() {
     const fullCalendarOptions = this.get('fullCalendarOptions');
     const options = {};
 
@@ -208,27 +251,15 @@ export default Ember.Component.extend(InvokeActionMixin, {
     }
 
     return options;
-  }),
+  },
 
-  /**
-   * Returns all of the valid Fullcalendar callback event
-   * names that were passed into the component.
+  /*
+   * Returns all valid actions of Full calendar
+   * that were passed into the component
    */
-  usedEvents: computed('fullCalendarEvents', function() {
-    return this.get('fullCalendarEvents').filter(eventName => {
-      const methodName = `_${eventName}`;
-      return this.get(methodName) !== undefined || this.get(eventName) !== undefined;
-    });
-  }),
-
-  /**
-   * Returns an object that contains a function for each action passed
-   * into the component. This object is passed into Fullcalendar.
-   */
-  hooks: computed(function() {
+  getEvents() {
     const actions = {};
-
-    this.get('usedEvents').forEach((eventName) => {
+    this.getPassedEvents().forEach((eventName) => {
 
       // create an event handler that runs the function inside an event loop.
       actions[eventName] = (...args) => {
@@ -236,11 +267,22 @@ export default Ember.Component.extend(InvokeActionMixin, {
           this.invokeAction(eventName, ...args, this.get('calendar'));
         });
       };
+
     });
 
     return actions;
-  }),
+  },
 
+  /*
+   * Returns all of the valid Fullcalendar callback event
+   * names that were passed into the component.
+   */
+  getPassedEvents() {
+    return this.get('fullCalendarEvents').filter(eventName => {
+      const methodName = `_${eventName}`;
+      return this.get(methodName) !== undefined || this.get(eventName) !== undefined;
+    });
+  },
 
   /////////////////////////////////////
   // OBSERVERS
@@ -252,10 +294,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
    */
   observeEvents: observer('events.[]', function () {
     const events = this.get('events');
-
     this.get('calendar').batchRendering(() => {
       this.get('calendar').getEvents().forEach(e => e.remove());
-
       if (events) {
         this.get('calendar').addEventSource(this.get('events'));
       }
@@ -270,7 +310,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
      this.get('calendar').batchRendering(() => {
        this.get('calendar').getEventSources().forEach(e => e.remove());
 
-       this.get('eventSources').forEach(function(source){
+       this.get('eventSources').forEach(source => {
          if (source) {
            this.get('calendar').addEventSource(source);
          }
@@ -291,7 +331,7 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Observes the 'viewName' property allowing FullCalendar view to be
    * changed from outside of the component.
    */
-  viewNameDidChange: Ember.observer('viewName', function() {
+  viewNameDidChange: observer('viewName', function() {
     const viewName = this.get('viewName');
     const viewRange = this.get('viewRange');
 
@@ -307,9 +347,8 @@ export default Ember.Component.extend(InvokeActionMixin, {
    * Observes `date` property allowing date to be changed from outside
    * of the component.
    */
-  dateDidChange: Ember.observer('date', function() {
+  dateDidChange: observer('date', function() {
     let date = this.get('date');
     this.get('calendar').gotoDate(date);
   })
-
 });

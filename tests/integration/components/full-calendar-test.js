@@ -70,14 +70,14 @@ module('Integration | Component | full calendar', function(hooks) {
     }, {
       title: 'New Event 2',
       start: moment({ day: 6, hour: 7, minute: 8, second: 8 }).toDate(),
-      end: moment({ day: 7, hour: 9, minute: 8, second: 8 }).toDate()
+      end: moment({ day: 6, hour: 9, minute: 8, second: 8 }).toDate()
     }]));
 
     assert.equal(findAll('.fc-title').length, 2);
     assert.equal(concatTextContent('.fc-title'), 'New Event 1New Event 2');
   });
 
-  test('set events to null removes events', async function (assert) {
+  test('set events to empty array removes events', async function (assert) {
     let eventsArray = getEventsArray();
 
     this.set('eventsArray', eventsArray);
@@ -87,7 +87,7 @@ module('Integration | Component | full calendar', function(hooks) {
     assert.equal(findAll('.fc-title').length, 4);
     assert.equal(concatTextContent('.fc-title'), 'Event 1Event 2Event 3Event 4');
 
-    this.set('eventsArray', null);
+    this.set('eventsArray', []);
 
     assert.equal(findAll('.fc-title').length, 0);
   });
