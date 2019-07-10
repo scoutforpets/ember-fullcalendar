@@ -1,9 +1,10 @@
 import Ember from 'ember';
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import hbs from 'htmlbars-inline-precompile';
 import moment from 'moment';
 import { find, findAll, render } from 'ember-test-helpers';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import resourceDayGridPlugin from '@fullcalendar/resource-daygrid';
 import { setupRenderingTest } from 'ember-qunit';
 
 let getEventsArray = () => {
@@ -126,5 +127,79 @@ module('Integration | Component | full calendar', function(hooks) {
 
     assert.equal(findAll('.fc-title').length, 5);
     assert.equal(concatTextContent('.fc-title'), 'Event 1Event 2Event 3Event 4New Event');
+  });
+
+  skip('it supports changes in resources array', async function (assert) {
+    let resourcesArray = Ember.A([
+      {
+        id: 'a',
+        title: 'Room A',
+      }
+    ]);
+
+    this.set('resourcesArray', resourcesArray);
+
+    this.plugins.push(resourceDayGridPlugin);
+
+    await render(hbs`{{full-calendar defaultView="resourceDayGridDay" plugins=plugins resources=resourcesArray}}`);
+
+    assert.equal(findAll('.fc-resource-cell').length, 1);
+    assert.equal(find('.fc-resource-cell').textContent, 'Room A');
+
+    resourcesArray.insertAt(0, {id: 'b', title: 'Room B'});
+
+    assert.equal(findAll('.fc-resource-cell').length, 2);
+    assert.equal(concatTextContent('.fc-resource-cell'), 'Room BRoom A');
+  });
+
+  test('it supports changes in eventSources array', async function (assert) {
+    let eventSourcesArray = Ember.A([
+      {
+        events: [{
+          title: 'Event 1',
+          start: moment({ day: 5, hour: 7, minute: 8, second: 8 }).toDate(),
+          end: moment({ day: 5, hour: 9, minute: 8, second: 8 }).toDate()
+        }],
+      },
+    ]);
+
+    this.set('eventSourcesArray', eventSourcesArray);
+
+    await render(hbs`{{full-calendar plugins=plugins eventSources=eventSourcesArray}}`);
+
+    assert.equal(findAll('.fc-title').length, 1);
+
+    eventSourcesArray.pushObject([{
+      title: 'Event 2',
+      start: moment({ day: 6, hour: 7, minute: 8, second: 8 }).toDate(),
+      end: moment({ day: 6, hour: 9, minute: 8, second: 8 }).toDate()
+    }]);
+
+    assert.equal(findAll('.fc-title').length, 2);
+    assert.equal(concatTextContent('.fc-title'), 'Event 1Event 2');
+  });
+
+  test('it supports change of viewName property', async function (assert) {
+    this.set('viewName', 'dayGridDay');
+
+    await render(hbs`{{full-calendar plugins=plugins viewName=viewName}}`);
+
+    assert.equal(findAll('.fc-day').length, 1);
+
+    this.set('viewName', 'dayGridWeek');
+
+    assert.equal(findAll('.fc-day').length, 7);
+  });
+
+  test('it supports change of date property', async function (assert) {
+    this.set('date', '2019-07-01');
+
+    await render(hbs`{{full-calendar defaultView="dayGridDay" plugins=plugins date=date}}`);
+
+    assert.equal(find('.fc-day-header').textContent, 'Monday');
+
+    this.set('date', '2019-07-02');
+
+    assert.equal(find('.fc-day-header').textContent, 'Tuesday');
   });
 });
