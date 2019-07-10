@@ -17,11 +17,12 @@
 
 <h3>Change Current Date</h3>
 <button onclick={{action "changeDate"}}>Move Date 7 Days from Now</button>
+<button onclick={{action "next"}}>Calendar.next()</button>
 <br>
 <br>
 
 {{#if fastboot.isFastBoot}}
   loading...
 {{else}}
-  {{full-calendar plugins=plugins events=eventsArray viewName=viewName date=startDate}}
+  {{full-calendar plugins=plugins events=eventsArray viewName=viewName date=startDate viewSkeletonRender=(action "viewSkeletonRender")}}
 {{/if}}

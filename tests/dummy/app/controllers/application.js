@@ -55,7 +55,15 @@ export default Controller.extend({
        const newDate = new Date();
        newDate.setDate(newDate.getDate() + 7);
        this.set('startDate', newDate);
-     }
+     },
+
+     viewSkeletonRender(info, calendar) {
+       this.set('calendar', calendar);
+     },
+
+     next() {
+       this.get('calendar').next();
+     },
    }
 
 });
