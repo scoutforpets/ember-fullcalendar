@@ -16,6 +16,16 @@ To install it run:
 ## Overview
 This addon currently supports every option and callback currently available for FullCalendar and FullCalendar Scheduler 4.2. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
+## Upgrading
+
+If you upgrade from a previous version of `ember-fullcalendar` using FullCalendar 3.x, note the [FullCalendar v4 release notes and upgrade guide](https://fullcalendar.io/docs/upgrading-from-v3).
+
+To use plugins, you need to pass a `plugins` array to the `full-calendar` component and add any plugins you need to the dependencies of your app. The plugin css must be included by [adding the plugin to your environment.js](#usage).
+
+You no longer need to define `includeLocales` in your environment.js, but instead [import and pass them in the `locales` option](#locales).
+
+Instead of setting `includeScheduler` use the appropriate Scheduler plugins.
+
 ## Usage
 
 A simple example:
@@ -149,6 +159,7 @@ var ENV = {
   }
   // Other options here, as needed.
 };
+```
 
 ## FullCalendar Locales
 To use locales, import and pass them in the `locales` option. [See the docs for more info](https://fullcalendar.io/docs/locale)
