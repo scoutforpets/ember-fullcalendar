@@ -7,14 +7,14 @@
 
 ## Installation
 
-This addon works in Ember 1.13.9+ or 2.0+ with no deprecations.
+This addon works in Ember 2.12+ with no deprecations.
 
 To install it run:
 
 ```ember install ember-fullcalendar```
 
 ## Overview
-This addon currently supports every option and callback currently available for FullCalendar and FullCalendar Scheduler 4.2. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
+This addon currently supports every option and callback currently available for FullCalendar and FullCalendar Scheduler 4.4. Please see the [FullCalendar documentation](http://fullcalendar.io/docs/) for more information.
 
 ## Upgrading
 
