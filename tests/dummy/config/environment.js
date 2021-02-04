@@ -21,7 +21,11 @@ module.exports = function(environment) {
     APP: {
       // Here you can pass flags/options to your application instance
       // when it is created
-    }
+    },
+
+    emberFullCalendar: {
+      plugins: ['core', 'daygrid'],
+    },
   };
 
   if (environment === 'development') {
@@ -44,7 +48,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    //
   }
 
   return ENV;

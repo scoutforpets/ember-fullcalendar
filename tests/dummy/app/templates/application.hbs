@@ -1,27 +1,28 @@
 <h2 id="title">Welcome to Ember</h2>
 
 <ul>
-{{#each eventsArray as |event|}}
-  <li>{{event.title}} <button onclick={{action "removeEvent" event}}>x</button></li>
-{{/each}}
+  {{#each eventsArray as |event|}}
+    <li>{{event.title}} <button onclick={{action "removeEvent" event}}>x</button></li>
+  {{/each}}
 </ul>
 
 {{input value=eventTitle}} <button onclick={{action "addEvent" event}}>Add</button>
 
 <h3>Change Calendar View</h3>
-<button onclick={{action "changeView" "month"}}>Month</button>
-<button onclick={{action "changeView" "agendaWeek"}}>Week</button>
-<button onclick={{action "changeView" "agendaDay"}}>Day</button>
-<br/>
-<br/>
+<button onclick={{action "changeView" "dayGridMonth"}}>Month</button>
+<button onclick={{action "changeView" "dayGridWeek"}}>Week</button>
+<button onclick={{action "changeView" "dayGridDay"}}>Day</button>
+<br>
+<br>
 
 <h3>Change Current Date</h3>
 <button onclick={{action "changeDate"}}>Move Date 7 Days from Now</button>
-<br/>
-<br/>
+<button onclick={{action "next"}}>Calendar.next()</button>
+<br>
+<br>
 
 {{#if fastboot.isFastBoot}}
   loading...
 {{else}}
-  {{full-calendar events=eventsArray viewName=viewName date=startDate}}
+  {{full-calendar plugins=plugins events=eventsArray viewName=viewName date=startDate viewSkeletonRender=(action "viewSkeletonRender")}}
 {{/if}}
